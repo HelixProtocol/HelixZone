@@ -10,6 +10,9 @@ on:
   schedule:
     - cron: '0 0 * * 0'  # Weekly security scan
 
+env:
+  DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -73,8 +76,6 @@ jobs:
     - name: Notify Discord on Success
       if: success()
       uses: sarisia/actions-status-discord@v1
-      env:
-        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
         webhook: ${{ env.DISCORD_WEBHOOK }}
         title: "✅ CI Passed - HelixZone"
@@ -98,8 +99,6 @@ jobs:
     - name: Notify Discord on Failure
       if: failure()
       uses: sarisia/actions-status-discord@v1
-      env:
-        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
         webhook: ${{ env.DISCORD_WEBHOOK }}
         title: "❌ CI Failed - HelixZone"
@@ -165,8 +164,6 @@ jobs:
 
     - name: Notify Discord on Release
       uses: sarisia/actions-status-discord@v1
-      env:
-        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
         webhook: ${{ env.DISCORD_WEBHOOK }}
         title: "🚀 New Release Built"
@@ -195,8 +192,6 @@ jobs:
     - name: Notify Discord on Security Issues
       if: failure()
       uses: sarisia/actions-status-discord@v1
-      env:
-        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
         webhook: ${{ env.DISCORD_WEBHOOK }}
         title: "🚨 Security Issues Found"
