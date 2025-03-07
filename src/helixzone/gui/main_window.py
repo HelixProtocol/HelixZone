@@ -1,13 +1,14 @@
 from PyQt6.QtWidgets import (
     QMainWindow, QDockWidget, QToolBar, QMenuBar,
     QApplication, QWidget, QVBoxLayout, QLabel,
-    QFileDialog, QMessageBox, QButtonGroup
+    QFileDialog, QMessageBox, QButtonGroup, QAbstractButton
 )
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QAction, QIcon, QImage
 from .canvas import CanvasView
 from .layer_widget import LayerWidget
 from .tool_options import ToolOptionsWidget
+from typing import Optional
 import os
 
 class MainWindow(QMainWindow):
@@ -196,7 +197,8 @@ class MainWindow(QMainWindow):
             
             # Add to button group and connect
             tool_button = main_toolbar.widgetForAction(action)
-            tool_group.addButton(tool_button)
+            if tool_button is not None and isinstance(tool_button, QAbstractButton):
+                tool_group.addButton(tool_button)
             
             # Connect tool selection
             if identifier in ['brush', 'eraser']:
@@ -205,8 +207,10 @@ class MainWindow(QMainWindow):
                 )
         
         # Set brush as default tool
-        tool_group.buttons()[2].setChecked(True)  # Brush is third in the list
-        self.select_tool('brush')
+        buttons = tool_group.buttons()
+        if len(buttons) > 2:  # Check for valid index
+            buttons[2].setChecked(True)  # Brush is third in the list
+            self.select_tool('brush')
             
     def setup_dock_widgets(self):
         # Layers dock
