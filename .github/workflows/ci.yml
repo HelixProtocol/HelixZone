@@ -73,28 +73,48 @@ jobs:
     - name: Notify Discord on Success
       if: success()
       uses: sarisia/actions-status-discord@v1
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        title: "✅ CI Passed"
+        webhook: ${{ env.DISCORD_WEBHOOK }}
+        title: "✅ CI Passed - HelixZone"
         description: |
-          Branch: ${{ github.ref }}
-          Commit: ${{ github.sha }}
-          OS: ${{ matrix.os }}
-          Python: ${{ matrix.python-version }}
+          **Build Status:** Success! 🎉
+          **Branch:** ${{ github.ref_name }}
+          **Commit:** [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
+          **OS:** ${{ matrix.os }}
+          **Python:** ${{ matrix.python-version }}
+          
+          **Test Results:**
+          - All tests passed
+          - Coverage report uploaded
+          - Memory profile generated
+          
+          [View Details](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
         color: 0x28A745
+        username: "HelixZone CI"
+        avatar_url: "https://github.com/HelixProtocol/HelixZone/raw/main/assets/logo.png"
 
     - name: Notify Discord on Failure
       if: failure()
       uses: sarisia/actions-status-discord@v1
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        title: "❌ CI Failed"
+        webhook: ${{ env.DISCORD_WEBHOOK }}
+        title: "❌ CI Failed - HelixZone"
         description: |
-          Branch: ${{ github.ref }}
-          Commit: ${{ github.sha }}
-          OS: ${{ matrix.os }}
-          Python: ${{ matrix.python-version }}
+          **Build Status:** Failed ❌
+          **Branch:** ${{ github.ref_name }}
+          **Commit:** [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
+          **OS:** ${{ matrix.os }}
+          **Python:** ${{ matrix.python-version }}
+          
+          Please check the logs for more details:
+          [View Error Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
         color: 0xDC3545
+        username: "HelixZone CI"
+        avatar_url: "https://github.com/HelixProtocol/HelixZone/raw/main/assets/logo.png"
 
   build:
     needs: test
@@ -145,8 +165,10 @@ jobs:
 
     - name: Notify Discord on Release
       uses: sarisia/actions-status-discord@v1
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        webhook: ${{ env.DISCORD_WEBHOOK }}
         title: "🚀 New Release Built"
         description: |
           Version: ${{ github.ref }}
@@ -173,8 +195,10 @@ jobs:
     - name: Notify Discord on Security Issues
       if: failure()
       uses: sarisia/actions-status-discord@v1
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        webhook: ${{ env.DISCORD_WEBHOOK }}
         title: "🚨 Security Issues Found"
         description: "CodeQL analysis found potential security issues."
         color: 0xDC3545 
