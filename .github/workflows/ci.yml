@@ -7,6 +7,8 @@ on:
     branches: [ main ]
   release:
     types: [created]
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly security scan
 
 jobs:
   test:
@@ -18,16 +20,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
+        cache: 'pip'
         
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest mypy
+        pip install flake8 pytest pytest-cov mypy bandit safety pytest-benchmark memory_profiler
         pip install -r requirements.txt
+        
+    - name: Security check dependencies
+      run: safety check
+        
+    - name: Security check code
+      run: bandit -r src -c pyproject.toml
         
     - name: Lint with flake8
       run: |
@@ -38,9 +48,53 @@ jobs:
       run: |
         mypy src
         
-    - name: Run tests
+    - name: Run tests with coverage
       run: |
-        pytest
+        pytest --cov=src --cov-report=xml --benchmark-only
+        
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: true
+
+    - name: Memory profiling
+      run: |
+        python -m memory_profiler -o memory_profile.log tests/test_image_processing.py
+        
+    - name: Upload memory profile
+      uses: actions/upload-artifact@v3
+      with:
+        name: memory-profile
+        path: memory_profile.log
+
+    - name: Notify Discord on Success
+      if: success()
+      uses: sarisia/actions-status-discord@v1
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        title: "✅ CI Passed"
+        description: |
+          Branch: ${{ github.ref }}
+          Commit: ${{ github.sha }}
+          OS: ${{ matrix.os }}
+          Python: ${{ matrix.python-version }}
+        color: 0x28A745
+
+    - name: Notify Discord on Failure
+      if: failure()
+      uses: sarisia/actions-status-discord@v1
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        title: "❌ CI Failed"
+        description: |
+          Branch: ${{ github.ref }}
+          Commit: ${{ github.sha }}
+          OS: ${{ matrix.os }}
+          Python: ${{ matrix.python-version }}
+        color: 0xDC3545
 
   build:
     needs: test
@@ -67,6 +121,7 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
+        cache: 'pip'
         
     - name: Install dependencies
       run: |
@@ -86,4 +141,40 @@ jobs:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./dist/${{ matrix.artifact_name }}
         asset_name: ${{ matrix.asset_name }}
-        asset_content_type: application/octet-stream 
+        asset_content_type: application/octet-stream
+
+    - name: Notify Discord on Release
+      uses: sarisia/actions-status-discord@v1
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        title: "🚀 New Release Built"
+        description: |
+          Version: ${{ github.ref }}
+          Platform: ${{ matrix.os }}
+        color: 0x17A2B8
+
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: python
+        
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+
+    - name: Notify Discord on Security Issues
+      if: failure()
+      uses: sarisia/actions-status-discord@v1
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        title: "🚨 Security Issues Found"
+        description: "CodeQL analysis found potential security issues."
+        color: 0xDC3545 
