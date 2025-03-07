@@ -23,7 +23,7 @@ A professional-grade image editing application built with PyQt6 and modern Pytho
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/helixzone.git
+git clone https://github.com/HelixProtocol/HelixZone.git
 cd helixzone
 ```
 
@@ -77,4 +77,4 @@ python src/main.py
 
 ## License
 
-MIT License - See LICENSE file for details 
+MIT License - See LICENSE file for details
