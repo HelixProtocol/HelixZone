@@ -10,9 +10,6 @@ on:
   schedule:
     - cron: '0 0 * * 0'  # Weekly security scan
 
-env:
-  DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -77,7 +74,8 @@ jobs:
       if: success()
       uses: sarisia/actions-status-discord@v1
       with:
-        webhook: ${{ env.DISCORD_WEBHOOK }}
+        nodetail: true
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
         title: "✅ CI Passed - HelixZone"
         description: |
           **Build Status:** Success! 🎉
@@ -100,7 +98,8 @@ jobs:
       if: failure()
       uses: sarisia/actions-status-discord@v1
       with:
-        webhook: ${{ env.DISCORD_WEBHOOK }}
+        nodetail: true
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
         title: "❌ CI Failed - HelixZone"
         description: |
           **Build Status:** Failed ❌
@@ -165,7 +164,8 @@ jobs:
     - name: Notify Discord on Release
       uses: sarisia/actions-status-discord@v1
       with:
-        webhook: ${{ env.DISCORD_WEBHOOK }}
+        nodetail: true
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
         title: "🚀 New Release Built"
         description: |
           Version: ${{ github.ref }}
@@ -193,7 +193,8 @@ jobs:
       if: failure()
       uses: sarisia/actions-status-discord@v1
       with:
-        webhook: ${{ env.DISCORD_WEBHOOK }}
+        nodetail: true
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
         title: "🚨 Security Issues Found"
         description: "CodeQL analysis found potential security issues."
         color: 0xDC3545 
