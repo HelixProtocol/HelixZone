@@ -70,50 +70,6 @@ jobs:
         name: memory-profile
         path: memory_profile.log
 
-    - name: Notify Discord on Success
-      if: success()
-      uses: sarisia/actions-status-discord@v1
-      with:
-        nodetail: true
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        title: "✅ CI Passed - HelixZone"
-        description: |
-          **Build Status:** Success! 🎉
-          **Branch:** ${{ github.ref_name }}
-          **Commit:** [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
-          **OS:** ${{ matrix.os }}
-          **Python:** ${{ matrix.python-version }}
-          
-          **Test Results:**
-          - All tests passed
-          - Coverage report uploaded
-          - Memory profile generated
-          
-          [View Details](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-        color: 0x28A745
-        username: "HelixZone CI"
-        avatar_url: "https://github.com/HelixProtocol/HelixZone/raw/main/assets/logo.png"
-
-    - name: Notify Discord on Failure
-      if: failure()
-      uses: sarisia/actions-status-discord@v1
-      with:
-        nodetail: true
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        title: "❌ CI Failed - HelixZone"
-        description: |
-          **Build Status:** Failed ❌
-          **Branch:** ${{ github.ref_name }}
-          **Commit:** [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
-          **OS:** ${{ matrix.os }}
-          **Python:** ${{ matrix.python-version }}
-          
-          Please check the logs for more details:
-          [View Error Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-        color: 0xDC3545
-        username: "HelixZone CI"
-        avatar_url: "https://github.com/HelixProtocol/HelixZone/raw/main/assets/logo.png"
-
   build:
     needs: test
     runs-on: ${{ matrix.os }}
@@ -161,17 +117,6 @@ jobs:
         asset_name: ${{ matrix.asset_name }}
         asset_content_type: application/octet-stream
 
-    - name: Notify Discord on Release
-      uses: sarisia/actions-status-discord@v1
-      with:
-        nodetail: true
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        title: "🚀 New Release Built"
-        description: |
-          Version: ${{ github.ref }}
-          Platform: ${{ matrix.os }}
-        color: 0x17A2B8
-
   codeql:
     name: CodeQL Analysis
     runs-on: ubuntu-latest
@@ -187,14 +132,4 @@ jobs:
         languages: python
         
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
-
-    - name: Notify Discord on Security Issues
-      if: failure()
-      uses: sarisia/actions-status-discord@v1
-      with:
-        nodetail: true
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        title: "🚨 Security Issues Found"
-        description: "CodeQL analysis found potential security issues."
-        color: 0xDC3545 
+      uses: github/codeql-action/analyze@v2 
