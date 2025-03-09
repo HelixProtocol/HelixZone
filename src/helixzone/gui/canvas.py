@@ -6,7 +6,7 @@ from ..core.tool_manager import ToolManager
 from ..core.commands import CommandStack, DrawCommand
 import numpy as np
 import cv2
-from typing import Optional, cast
+from typing import Optional, cast, Union
 
 class Canvas(QWidget):
     def __init__(self, parent=None):
@@ -62,18 +62,32 @@ class Canvas(QWidget):
         """Get the merged image of all layers."""
         return self.layer_stack.merge_visible()
         
-    def get_transformed_pos(self, pos):
+    def get_transformed_pos(self, pos: Union[QPoint, QPointF]) -> QPointF:
         """Convert screen coordinates to image coordinates."""
-        # Create inverse transform
-        transform = QTransform()
-        transform.scale(self.scale_factor, self.scale_factor)
-        transform.translate(self.last_pan.x() / self.scale_factor,
-                          self.last_pan.y() / self.scale_factor)
-        inverse_transform, invertible = transform.inverted()
-        
-        if invertible:
-            return inverse_transform.map(pos)
-        return pos
+        try:
+            # Convert to QPointF if needed
+            if isinstance(pos, QPoint):
+                pos = QPointF(pos)
+            elif not isinstance(pos, QPointF):
+                return QPointF(0, 0)  # Return safe default if pos is invalid
+            
+            # Create inverse transform
+            transform = QTransform()
+            transform.scale(self.scale_factor, self.scale_factor)
+            transform.translate(self.last_pan.x() / self.scale_factor,
+                            self.last_pan.y() / self.scale_factor)
+            inverse_transform, invertible = transform.inverted()
+            
+            if invertible:
+                transformed_pos = inverse_transform.map(pos)
+                # Ensure the transformed position is within valid bounds
+                x = max(0.0, min(transformed_pos.x(), float(self.width() - 1)))
+                y = max(0.0, min(transformed_pos.y(), float(self.height() - 1)))
+                return QPointF(x, y)
+            return QPointF(pos)  # Return safe copy if transform not invertible
+        except Exception as e:
+            print(f"Error in get_transformed_pos: {e}")
+            return QPointF(0, 0)
         
     def get_selection(self) -> Optional[np.ndarray]:
         """Get the current selection mask."""

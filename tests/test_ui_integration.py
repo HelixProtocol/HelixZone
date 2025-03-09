@@ -1,7 +1,7 @@
 import pytest
 from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import Qt, QPoint
-from PyQt6.QtGui import QColor, QPainterPath
+from PyQt6.QtCore import Qt, QPoint, QPointF, QEvent
+from PyQt6.QtGui import QColor, QPainterPath, QMouseEvent
 from helixzone.gui.main_window import MainWindow
 from helixzone.gui.canvas import CanvasView
 from helixzone.core.tools import BrushTool, EraserTool
@@ -50,23 +50,55 @@ def test_drawing_operations(main_window):
     """Test basic drawing operations."""
     canvas = main_window.canvas_view.canvas
     
+    # Ensure we have an active layer
+    if not canvas.layer_stack.get_active_layer():
+        main_window.add_layer()
+    
     # Select brush tool
-    main_window.select_tool('brush')
+    canvas.tool_manager.set_tool('brush')
     
     # Simulate drawing
     start_pos = QPoint(100, 100)
     end_pos = QPoint(200, 200)
     
     # Get color before
-    color_before = canvas.get_image().pixel(100, 100)
+    layer = canvas.layer_stack.get_active_layer()
+    assert layer is not None, "No active layer available"
+    color_before = layer.image.pixel(100, 100)
     
-    # Simulate mouse events
-    canvas.mousePressEvent(type('MockEvent', (), {'pos': lambda: start_pos, 'button': lambda: Qt.MouseButton.LeftButton}))
-    canvas.mouseMoveEvent(type('MockEvent', (), {'pos': lambda: end_pos, 'buttons': lambda: Qt.MouseButton.LeftButton}))
-    canvas.mouseReleaseEvent(type('MockEvent', (), {'pos': lambda: end_pos, 'button': lambda: Qt.MouseButton.LeftButton}))
+    # Create proper QMouseEvent objects
+    press_event = QMouseEvent(
+        QEvent.Type.MouseButtonPress,
+        QPointF(start_pos),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    
+    move_event = QMouseEvent(
+        QEvent.Type.MouseMove,
+        QPointF(end_pos),
+        Qt.MouseButton.NoButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    
+    release_event = QMouseEvent(
+        QEvent.Type.MouseButtonRelease,
+        QPointF(end_pos),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    
+    # Get the brush tool and simulate drawing
+    tool = canvas.tool_manager.get_current_tool()
+    tool.mouse_press(press_event)
+    tool.mouse_move(move_event)
+    tool.mouse_release(release_event)
     
     # Get color after
-    color_after = canvas.get_image().pixel(100, 100)
+    color_after = layer.image.pixel(100, 100)
     
     # Should have changed the pixel color
     assert color_before != color_after
@@ -115,7 +147,8 @@ def test_lasso_selection(main_window):
     canvas = main_window.canvas_view.canvas
     
     # Select lasso tool
-    main_window.select_tool('lasso_selection')
+    canvas.tool_manager.set_tool('lasso_selection')
+    tool = canvas.tool_manager.get_current_tool()
     
     # Create a triangular selection
     points = [
@@ -124,18 +157,40 @@ def test_lasso_selection(main_window):
         QPoint(50, 200),   # Bottom left
     ]
     
+    # Create proper QMouseEvent objects
+    press_event = QMouseEvent(
+        QEvent.Type.MouseButtonPress,
+        QPointF(points[0]),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    
     # Simulate mouse events for drawing the selection
-    canvas.mousePressEvent(type('MockEvent', (), {'pos': lambda: points[0], 'button': lambda: Qt.MouseButton.LeftButton}))
+    tool.mouse_press(press_event)
     
     # Move to each point
     for point in points[1:]:
-        canvas.mouseMoveEvent(type('MockEvent', (), {'pos': lambda: point, 'buttons': lambda: Qt.MouseButton.LeftButton}))
+        move_event = QMouseEvent(
+            QEvent.Type.MouseMove,
+            QPointF(point),
+            Qt.MouseButton.NoButton,
+            Qt.MouseButton.LeftButton,
+            Qt.KeyboardModifier.NoModifier
+        )
+        tool.mouse_move(move_event)
     
     # Release to complete the selection
-    canvas.mouseReleaseEvent(type('MockEvent', (), {'pos': lambda: points[-1], 'button': lambda: Qt.MouseButton.LeftButton}))
+    release_event = QMouseEvent(
+        QEvent.Type.MouseButtonRelease,
+        QPointF(points[-1]),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    tool.mouse_release(release_event)
     
     # Get the selection mask
-    tool = canvas.tool_manager.get_current_tool()
     mask = tool.get_selection_mask(canvas.width(), canvas.height())
     
     # Verify the mask is a boolean numpy array
@@ -155,13 +210,27 @@ def test_lasso_selection(main_window):
 def test_lasso_selection_edge_cases(main_window):
     """Test lasso selection tool edge cases."""
     canvas = main_window.canvas_view.canvas
-    main_window.select_tool('lasso_selection')
+    canvas.tool_manager.set_tool('lasso_selection')
     tool = canvas.tool_manager.get_current_tool()
     
     # Test 1: Single point selection (should result in empty selection)
     point = QPoint(100, 100)
-    canvas.mousePressEvent(type('MockEvent', (), {'pos': lambda: point, 'button': lambda: Qt.MouseButton.LeftButton}))
-    canvas.mouseReleaseEvent(type('MockEvent', (), {'pos': lambda: point, 'button': lambda: Qt.MouseButton.LeftButton}))
+    press_event = QMouseEvent(
+        QEvent.Type.MouseButtonPress,
+        QPointF(point),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    release_event = QMouseEvent(
+        QEvent.Type.MouseButtonRelease,
+        QPointF(point),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    tool.mouse_press(press_event)
+    tool.mouse_release(release_event)
     
     mask = tool.get_selection_mask(canvas.width(), canvas.height())
     assert not mask.any()  # Mask should be all False
@@ -169,9 +238,30 @@ def test_lasso_selection_edge_cases(main_window):
     
     # Test 2: Two-point selection (should result in empty selection)
     points = [QPoint(100, 100), QPoint(200, 200)]
-    canvas.mousePressEvent(type('MockEvent', (), {'pos': lambda: points[0], 'button': lambda: Qt.MouseButton.LeftButton}))
-    canvas.mouseMoveEvent(type('MockEvent', (), {'pos': lambda: points[1], 'buttons': lambda: Qt.MouseButton.LeftButton}))
-    canvas.mouseReleaseEvent(type('MockEvent', (), {'pos': lambda: points[1], 'button': lambda: Qt.MouseButton.LeftButton}))
+    press_event = QMouseEvent(
+        QEvent.Type.MouseButtonPress,
+        QPointF(points[0]),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    move_event = QMouseEvent(
+        QEvent.Type.MouseMove,
+        QPointF(points[1]),
+        Qt.MouseButton.NoButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    release_event = QMouseEvent(
+        QEvent.Type.MouseButtonRelease,
+        QPointF(points[1]),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    tool.mouse_press(press_event)
+    tool.mouse_move(move_event)
+    tool.mouse_release(release_event)
     
     mask = tool.get_selection_mask(canvas.width(), canvas.height())
     assert not mask.any()  # Mask should be all False
@@ -189,10 +279,33 @@ def test_lasso_selection_edge_cases(main_window):
     ]
     
     # Draw the star
-    canvas.mousePressEvent(type('MockEvent', (), {'pos': lambda: star_points[0], 'button': lambda: Qt.MouseButton.LeftButton}))
+    press_event = QMouseEvent(
+        QEvent.Type.MouseButtonPress,
+        QPointF(star_points[0]),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    tool.mouse_press(press_event)
+    
     for point in star_points[1:]:
-        canvas.mouseMoveEvent(type('MockEvent', (), {'pos': lambda: point, 'buttons': lambda: Qt.MouseButton.LeftButton}))
-    canvas.mouseReleaseEvent(type('MockEvent', (), {'pos': lambda: star_points[0], 'button': lambda: Qt.MouseButton.LeftButton}))
+        move_event = QMouseEvent(
+            QEvent.Type.MouseMove,
+            QPointF(point),
+            Qt.MouseButton.NoButton,
+            Qt.MouseButton.LeftButton,
+            Qt.KeyboardModifier.NoModifier
+        )
+        tool.mouse_move(move_event)
+    
+    release_event = QMouseEvent(
+        QEvent.Type.MouseButtonRelease,
+        QPointF(star_points[0]),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    tool.mouse_release(release_event)
     
     mask = tool.get_selection_mask(canvas.width(), canvas.height())
     # Check points that should be inside and outside the star
@@ -204,7 +317,7 @@ def test_lasso_selection_edge_cases(main_window):
 def test_lasso_selection_feathering(main_window):
     """Test lasso selection tool feathering functionality."""
     canvas = main_window.canvas_view.canvas
-    main_window.select_tool('lasso_selection')
+    canvas.tool_manager.set_tool('lasso_selection')
     tool = canvas.tool_manager.get_current_tool()
     
     # Create a simple triangular selection
@@ -221,10 +334,33 @@ def test_lasso_selection_feathering(main_window):
         tool.feather_radius = radius
         
         # Draw the selection
-        canvas.mousePressEvent(type('MockEvent', (), {'pos': lambda: points[0], 'button': lambda: Qt.MouseButton.LeftButton}))
+        press_event = QMouseEvent(
+            QEvent.Type.MouseButtonPress,
+            QPointF(points[0]),
+            Qt.MouseButton.LeftButton,
+            Qt.MouseButton.LeftButton,
+            Qt.KeyboardModifier.NoModifier
+        )
+        tool.mouse_press(press_event)
+        
         for point in points[1:]:
-            canvas.mouseMoveEvent(type('MockEvent', (), {'pos': lambda: point, 'buttons': lambda: Qt.MouseButton.LeftButton}))
-        canvas.mouseReleaseEvent(type('MockEvent', (), {'pos': lambda: points[0], 'button': lambda: Qt.MouseButton.LeftButton}))
+            move_event = QMouseEvent(
+                QEvent.Type.MouseMove,
+                QPointF(point),
+                Qt.MouseButton.NoButton,
+                Qt.MouseButton.LeftButton,
+                Qt.KeyboardModifier.NoModifier
+            )
+            tool.mouse_move(move_event)
+        
+        release_event = QMouseEvent(
+            QEvent.Type.MouseButtonRelease,
+            QPointF(points[0]),
+            Qt.MouseButton.LeftButton,
+            Qt.MouseButton.LeftButton,
+            Qt.KeyboardModifier.NoModifier
+        )
+        tool.mouse_release(release_event)
         
         # Get the selection mask
         mask = tool.get_selection_mask(canvas.width(), canvas.height())
@@ -242,14 +378,14 @@ def test_lasso_selection_feathering(main_window):
             assert mask.any()
             # The feathered region should be larger than the non-feathered region
             non_feathered = tool.get_selection_mask(canvas.width(), canvas.height())
-            assert mask.sum() >= non_feathered.sum() 
+            assert mask.sum() >= non_feathered.sum()
 
 @pytest.mark.performance
 def test_lasso_selection_performance(main_window):
     """Test lasso selection performance with large numbers of points."""
     import time
     canvas = main_window.canvas_view.canvas
-    main_window.select_tool('lasso_selection')
+    canvas.tool_manager.set_tool('lasso_selection')
     tool = canvas.tool_manager.get_current_tool()
     
     # Create a spiral pattern with many points
@@ -266,10 +402,33 @@ def test_lasso_selection_performance(main_window):
     start_time = time.time()
     
     # Draw the spiral
-    canvas.mousePressEvent(type('MockEvent', (), {'pos': lambda: points[0], 'button': lambda: Qt.MouseButton.LeftButton}))
+    press_event = QMouseEvent(
+        QEvent.Type.MouseButtonPress,
+        QPointF(points[0]),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    tool.mouse_press(press_event)
+    
     for point in points[1:]:
-        canvas.mouseMoveEvent(type('MockEvent', (), {'pos': lambda: point, 'buttons': lambda: Qt.MouseButton.LeftButton}))
-    canvas.mouseReleaseEvent(type('MockEvent', (), {'pos': lambda: points[0], 'button': lambda: Qt.MouseButton.LeftButton}))
+        move_event = QMouseEvent(
+            QEvent.Type.MouseMove,
+            QPointF(point),
+            Qt.MouseButton.NoButton,
+            Qt.MouseButton.LeftButton,
+            Qt.KeyboardModifier.NoModifier
+        )
+        tool.mouse_move(move_event)
+    
+    release_event = QMouseEvent(
+        QEvent.Type.MouseButtonRelease,
+        QPointF(points[0]),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier
+    )
+    tool.mouse_release(release_event)
     
     # Get the selection mask
     mask = tool.get_selection_mask(canvas.width(), canvas.height())

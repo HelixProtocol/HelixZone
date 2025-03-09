@@ -3,7 +3,7 @@ from PyQt6.QtCore import QObject
 
 if TYPE_CHECKING:
     from ..gui.canvas import Canvas
-    from .tools import Tool, BrushTool, EraserTool, RectangleSelection, EllipseSelection, LassoSelection
+    from .tools import Tool, BrushTool, EraserTool, RectangleSelection, EllipseSelection, LassoSelection, MagneticLassoSelection
 
 class ToolManager(QObject):
     """Manages the current tool and tool switching."""
@@ -12,14 +12,15 @@ class ToolManager(QObject):
         self.canvas = canvas
         
         # Import tools here to avoid circular imports
-        from .tools import BrushTool, EraserTool, RectangleSelection, EllipseSelection, LassoSelection
+        from .tools import BrushTool, EraserTool, RectangleSelection, EllipseSelection, LassoSelection, MagneticLassoSelection
         
         self.tools: Dict[str, 'Tool'] = {
             'brush': BrushTool(canvas),
             'eraser': EraserTool(canvas),
             'rectangle_selection': RectangleSelection(canvas),
             'ellipse_selection': EllipseSelection(canvas),
-            'lasso_selection': LassoSelection(canvas)
+            'lasso_selection': LassoSelection(canvas),
+            'magnetic_lasso': MagneticLassoSelection(canvas)
         }
         self.current_tool = self.tools['brush']
         

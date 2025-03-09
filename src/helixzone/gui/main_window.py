@@ -187,6 +187,7 @@ class MainWindow(QMainWindow):
             ("Rectangle Selection", "rectangle_selection"),
             ("Ellipse Selection", "ellipse_selection"),
             ("Lasso Selection", "lasso_selection"),
+            ("Magnetic Lasso", "magnetic_lasso"),
         ]
         
         for name, identifier in tool_actions:

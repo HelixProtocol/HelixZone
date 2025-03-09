@@ -178,6 +178,8 @@ class EnhancedLassoFeathering:
         """Initialize the feathering object."""
         self.feature_scale = 1.0
         self.scaler = StandardScaler()
+        self.debug_mode = False
+        self.mask_value = 255  # Maximum value for mask intensity
 
     def compute_edge_strength(self, image: np.ndarray) -> np.ndarray:
         """Compute edge strength map."""
@@ -418,6 +420,14 @@ class EnhancedLassoFeathering:
         result = cv2.cvtColor((result_lab * 255).astype(np.uint8), cv2.COLOR_LAB2BGR).astype(np.float32) / 255.0
 
         return result
+
+    def create_selection_mask(self, width: int, height: int, points: List[Tuple[int, int]]) -> np.ndarray:
+        mask = np.zeros((height, width), dtype=np.uint8)
+        if len(points) < 3:
+            return mask
+        points_array = np.array(points, dtype=np.int32)
+        cv2.fillPoly(mask, [points_array], color=(self.mask_value,))
+        return mask
 
 def compute_gabor_features(patch: np.ndarray, num_orientations: int = 4) -> np.ndarray:
     """Compute Gabor filter responses."""
