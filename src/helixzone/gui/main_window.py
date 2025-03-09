@@ -180,13 +180,14 @@ class MainWindow(QMainWindow):
         # Tool button group for exclusive selection
         tool_group = QButtonGroup(self)
         
-        # Add basic tools
+        # Add all tools
         tool_actions = [
-            ("Select", "select"),
-            ("Move", "move"),
             ("Brush", "brush"),
             ("Eraser", "eraser"),
-            ("Crop", "crop"),
+            ("Rectangle Selection", "rectangle_selection"),
+            ("Ellipse Selection", "ellipse_selection"),
+            ("Lasso Selection", "lasso_selection"),
+            ("Magnetic Lasso", "magnetic_lasso"),
         ]
         
         for name, identifier in tool_actions:
@@ -199,47 +200,57 @@ class MainWindow(QMainWindow):
             tool_button = main_toolbar.widgetForAction(action)
             if tool_button is not None and isinstance(tool_button, QAbstractButton):
                 tool_group.addButton(tool_button)
-            
-            # Connect tool selection
-            if identifier in ['brush', 'eraser']:
-                action.triggered.connect(
-                    lambda checked, tool=identifier: self.select_tool(tool)
-                )
+                tool_button.clicked.connect(lambda checked, i=identifier: self.on_tool_changed(i))
         
         # Set brush as default tool
-        buttons = tool_group.buttons()
-        if len(buttons) > 2:  # Check for valid index
-            buttons[2].setChecked(True)  # Brush is third in the list
-            self.select_tool('brush')
-            
+        first_action = main_toolbar.actions()[0]
+        first_action.setChecked(True)
+        self.on_tool_changed("brush")
+        
+    def on_tool_changed(self, tool_identifier: str) -> None:
+        """Handle tool selection changes."""
+        # Update the tool manager
+        self.canvas_view.canvas.tool_manager.set_tool(tool_identifier)
+        
+        # Update tool options widget
+        self.tool_options_widget.update_for_tool(tool_identifier)
+
+    def select_tool(self, tool_identifier: str) -> None:
+        """Select a tool programmatically (mainly for testing)."""
+        # Find and check the corresponding action
+        for action in self.findChildren(QAction):
+            if action.data() == tool_identifier:
+                action.setChecked(True)
+                break
+        
+        # Update tool
+        self.on_tool_changed(tool_identifier)
+        
     def setup_dock_widgets(self):
-        # Layers dock
-        layers_dock = QDockWidget("Layers", self)
-        layers_dock.setAllowedAreas(Qt.DockWidgetArea.RightDockWidgetArea | 
-                                  Qt.DockWidgetArea.LeftDockWidgetArea)
+        """Set up the dock widgets."""
+        # Tool Options
+        tool_options_dock = QDockWidget("Tool Options", self)
+        tool_options_dock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea | Qt.DockWidgetArea.RightDockWidgetArea)
+        self.tool_options_widget = ToolOptionsWidget(self)
+        tool_options_dock.setWidget(self.tool_options_widget)
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, tool_options_dock)
         
+        # Layer Widget
+        layer_dock = QDockWidget("Layers", self)
+        layer_dock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea | Qt.DockWidgetArea.RightDockWidgetArea)
         self.layer_widget = LayerWidget(self.canvas_view.canvas.layer_stack)
-        layers_dock.setWidget(self.layer_widget)
-        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, layers_dock)
+        layer_dock.setWidget(self.layer_widget)
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, layer_dock)
         
-        # Connect layer signals
-        self.layer_widget.layer_added.connect(self.canvas_view.canvas.update)
-        self.layer_widget.layer_removed.connect(self.canvas_view.canvas.update)
-        self.layer_widget.layer_selected.connect(self.canvas_view.canvas.update)
+        # Connect layer widget signals
+        self.layer_widget.update_layer_list()
         
-        # Tools dock
-        tools_dock = QDockWidget("Tool Options", self)
-        tools_dock.setAllowedAreas(Qt.DockWidgetArea.RightDockWidgetArea | 
-                                 Qt.DockWidgetArea.LeftDockWidgetArea)
-        
-        # Create tool options widget
-        self.tool_options = ToolOptionsWidget(self.canvas_view.canvas.tool_manager)
-        tools_dock.setWidget(self.tool_options)
-        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, tools_dock)
-    
     def add_layer(self):
-        """Add a new layer."""
-        self.layer_widget.add_layer()
+        """Add a new layer to the canvas."""
+        if hasattr(self.canvas_view, 'canvas'):
+            layer = self.canvas_view.canvas.layer_stack.add_layer(name=f"Layer {len(self.canvas_view.canvas.layer_stack.layers) + 1}")
+            if layer:
+                self.canvas_view.canvas.update()
     
     def merge_visible_layers(self):
         """Merge all visible layers into a new layer."""
@@ -248,9 +259,4 @@ class MainWindow(QMainWindow):
             new_layer = self.canvas_view.canvas.layer_stack.add_layer(name="Merged")
             new_layer.set_image(merged)
             self.layer_widget.update_layer_list()
-            self.canvas_view.canvas.update()
-    
-    def select_tool(self, tool_name):
-        """Switch to a different tool."""
-        self.canvas_view.canvas.tool_manager.set_tool(tool_name)
-        self.tool_options.update_for_tool(tool_name) 
+            self.canvas_view.canvas.update() 

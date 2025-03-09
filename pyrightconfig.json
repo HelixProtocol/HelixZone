@@ -6,6 +6,8 @@
         "src"
     ],
     "venvPath": ".",
-    "venv": "venv",
-    "typeCheckingMode": "basic"
+    "venv": ".venv",
+    "typeCheckingMode": "basic",
+    "reportMissingImports": true,
+    "reportMissingModuleSource": false
 }

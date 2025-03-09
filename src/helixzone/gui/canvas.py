@@ -1,10 +1,12 @@
 from PyQt6.QtWidgets import QWidget, QScrollArea
-from PyQt6.QtCore import Qt, QPoint, QSize, pyqtSignal
-from PyQt6.QtGui import QPainter, QImage, QPixmap, QTransform
+from PyQt6.QtCore import Qt, QPoint, QSize, pyqtSignal, QPointF
+from PyQt6.QtGui import QPainter, QImage, QPixmap, QTransform, QPen, QColor, QPainterPath
 from ..core.layer import LayerStack
-from ..core.tools import ToolManager
+from ..core.tool_manager import ToolManager
 from ..core.commands import CommandStack, DrawCommand
 import numpy as np
+import cv2
+from typing import Optional, cast, Union
 
 class Canvas(QWidget):
     def __init__(self, parent=None):
@@ -30,6 +32,9 @@ class Canvas(QWidget):
         
         # Current drawing command (for continuous strokes)
         self.current_draw_command = None
+        
+        # Selection mask
+        self._selection_mask = None
         
         # Enable mouse tracking for smooth panning and drawing
         self.setMouseTracking(True)
@@ -57,19 +62,47 @@ class Canvas(QWidget):
         """Get the merged image of all layers."""
         return self.layer_stack.merge_visible()
         
-    def get_transformed_pos(self, pos):
+    def get_transformed_pos(self, pos: Union[QPoint, QPointF]) -> QPointF:
         """Convert screen coordinates to image coordinates."""
-        # Create inverse transform
-        transform = QTransform()
-        transform.scale(self.scale_factor, self.scale_factor)
-        transform.translate(self.last_pan.x() / self.scale_factor,
-                          self.last_pan.y() / self.scale_factor)
-        inverse_transform, invertible = transform.inverted()
+        try:
+            # Convert to QPointF if needed
+            if isinstance(pos, QPoint):
+                pos = QPointF(pos)
+            elif not isinstance(pos, QPointF):
+                return QPointF(0, 0)  # Return safe default if pos is invalid
+            
+            # Create inverse transform
+            transform = QTransform()
+            transform.scale(self.scale_factor, self.scale_factor)
+            transform.translate(self.last_pan.x() / self.scale_factor,
+                            self.last_pan.y() / self.scale_factor)
+            inverse_transform, invertible = transform.inverted()
+            
+            if invertible:
+                transformed_pos = inverse_transform.map(pos)
+                # Ensure the transformed position is within valid bounds
+                x = max(0.0, min(transformed_pos.x(), float(self.width() - 1)))
+                y = max(0.0, min(transformed_pos.y(), float(self.height() - 1)))
+                return QPointF(x, y)
+            return QPointF(pos)  # Return safe copy if transform not invertible
+        except Exception as e:
+            print(f"Error in get_transformed_pos: {e}")
+            return QPointF(0, 0)
         
-        if invertible:
-            return inverse_transform.map(pos)
-        return pos
-        
+    def get_selection(self) -> Optional[np.ndarray]:
+        """Get the current selection mask."""
+        return self._selection_mask
+
+    def set_selection(self, mask: np.ndarray) -> None:
+        """Set the selection mask."""
+        self._selection_mask = mask.astype(np.float32)
+        self.update()
+
+    def clear_selection(self) -> None:
+        """Clear the current selection."""
+        self._selection_mask = None
+        self.update()
+
     def paintEvent(self, event):
         painter = QPainter(self)
         # Enable antialiasing for smoother rendering
@@ -88,6 +121,51 @@ class Canvas(QWidget):
         if merged_image:
             painter.drawImage(0, 0, merged_image)
         
+        # Draw selection overlay if exists
+        if self._selection_mask is not None:
+            # Create a semi-transparent overlay
+            overlay = QImage(self.width(), self.height(), QImage.Format.Format_ARGB32)
+            overlay.fill(Qt.GlobalColor.transparent)
+            
+            # Draw selection outline
+            overlay_painter = QPainter(overlay)
+            overlay_painter.setPen(QPen(QColor(0, 120, 215, 128), 1))  # Semi-transparent blue
+            overlay_painter.setBrush(QColor(0, 120, 215, 32))  # Very transparent blue
+            
+            # Convert mask to path
+            path = QPainterPath()
+            contours = cv2.findContours(
+                (self._selection_mask * 255).astype(np.uint8),
+                cv2.RETR_EXTERNAL,
+                cv2.CHAIN_APPROX_SIMPLE
+            )[0]
+            
+            for contour in contours:
+                # Convert contour points to QPointF
+                points = []
+                contour_array = cast(np.ndarray, contour)
+                for point in contour_array:
+                    x = float(point[0][0])
+                    y = float(point[0][1])
+                    points.append(QPointF(x, y))
+                
+                if points:
+                    path.moveTo(points[0])
+                    for point in points[1:]:
+                        path.lineTo(point)
+                    path.lineTo(points[0])  # Close the path
+            
+            overlay_painter.drawPath(path)
+            overlay_painter.end()
+            
+            # Draw the overlay
+            painter.drawImage(0, 0, overlay)
+        
+        # Draw tool preview (e.g., selection outlines)
+        current_tool = self.tool_manager.get_current_tool()
+        if current_tool:
+            current_tool.draw_preview(painter)
+        
     def wheelEvent(self, event):
         """Handle zoom with mouse wheel."""
         factor = 1.1 if event.angleDelta().y() > 0 else 0.9
@@ -104,14 +182,9 @@ class Canvas(QWidget):
             self.pan_start = event.pos()
             self.setCursor(Qt.CursorShape.ClosedHandCursor)
         else:
-            # Start new draw command
-            active_layer = self.layer_stack.get_active_layer()
-            if active_layer:
-                self.current_draw_command = DrawCommand(active_layer, active_layer.image)
-            
             # Handle tool
-            transformed_pos = self.get_transformed_pos(event.pos())
             self.tool_manager.get_current_tool().mouse_press(event)
+            self.update()  # Request repaint to show preview
             
     def mouseReleaseEvent(self, event):
         """Handle mouse release events."""
@@ -121,14 +194,8 @@ class Canvas(QWidget):
             self.setCursor(Qt.CursorShape.ArrowCursor)
         else:
             # Handle tool
-            transformed_pos = self.get_transformed_pos(event.pos())
             self.tool_manager.get_current_tool().mouse_release(event)
-            
-            # Finish draw command
-            if self.current_draw_command:
-                self.current_draw_command.execute()
-                self.command_stack.push(self.current_draw_command)
-                self.current_draw_command = None
+            self.update()  # Request repaint to show final result
             
     def mouseMoveEvent(self, event):
         """Handle mouse move events."""
@@ -140,8 +207,8 @@ class Canvas(QWidget):
             self.update()
         else:
             # Handle tool
-            transformed_pos = self.get_transformed_pos(event.pos())
             self.tool_manager.get_current_tool().mouse_move(event)
+            self.update()  # Request repaint to show preview
             
     def sizeHint(self):
         """Suggest a default size."""
