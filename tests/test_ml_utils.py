@@ -7,8 +7,13 @@ from helixzone.core.ml_utils import (
     lasso_selection_performance,
     EnhancedLassoFeathering,
     compute_lbp,
-    compute_gabor_features
+    compute_gabor_features,
+    create_feature_matrix
 )
+from PIL import Image
+import re
+import scipy.sparse
+from sklearn.preprocessing import RobustScaler
 
 def test_lasso_selection_performance():
     """Test the Lasso regression performance evaluation function."""
@@ -335,6 +340,581 @@ def test_compute_gabor_features():
     patch = np.random.rand(10, 10)
     features = compute_gabor_features(patch)
     
-    assert features.ndim == 1
+    assert isinstance(features, list)
     assert len(features) == 16  # 4 features * 4 orientations
-    assert np.all(np.isfinite(features)) 
+    assert all(isinstance(f, float) for f in features)
+    assert all(np.isfinite(f) for f in features)
+
+def test_feature_matrix_color_image():
+    """Test feature matrix creation with color images."""
+    # Create a color test image
+    img = np.zeros((100, 100, 3), dtype=np.uint8)
+    img[40:60, 40:60] = [255, 128, 64]  # Add a colored rectangle
+    
+    # Add some gradients
+    img[20:80, 20:80, 0] = np.linspace(0, 255, 60).reshape(60, 1)  # Red gradient
+    img[20:80, 20:80, 1] = np.linspace(0, 255, 60).reshape(1, 60)  # Green gradient
+    
+    # Test points at different locations
+    coords = [(50, 50), (30, 30), (70, 70)]
+    
+    # Test with different patch sizes
+    for patch_size in [5, 7, 9]:
+        features = create_feature_matrix(img, coords, patch_size)
+        assert features.shape[0] == len(coords)
+        assert features.shape[1] > 20  # Should have many features for color images
+
+def test_feature_matrix_edge_cases():
+    """Test feature matrix creation with edge cases."""
+    # Create test image
+    img = np.zeros((50, 50, 3), dtype=np.uint8)
+    
+    # Test points near image boundaries
+    coords = [
+        (0, 0),      # Top-left corner
+        (49, 49),    # Bottom-right corner
+        (0, 49),     # Top-right corner
+        (49, 0),     # Bottom-left corner
+        (25, 25)     # Center
+    ]
+    
+    features = create_feature_matrix(img, coords, patch_size=7)
+    assert features.shape[0] == len(coords)
+    assert not np.any(np.isnan(features))  # No NaN values
+    assert not np.any(np.isinf(features))  # No infinite values
+
+def test_lasso_feathering_color_handling():
+    """Test lasso feathering with color images and invalid inputs."""
+    feathering = EnhancedLassoFeathering()
+    
+    # Test with invalid image shapes
+    with pytest.raises(ValueError):
+        # Test with 4-channel image
+        invalid_img = np.zeros((50, 50, 4), dtype=np.uint8)
+        mask = np.zeros((50, 50), dtype=np.uint8)
+        feathering.apply_lasso_feathering(invalid_img, mask)
+    
+    with pytest.raises(ValueError):
+        # Test with incompatible mask shape
+        img = np.zeros((50, 50, 3), dtype=np.uint8)
+        invalid_mask = np.zeros((60, 60), dtype=np.uint8)
+        feathering.apply_lasso_feathering(img, invalid_mask)
+
+def test_color_aware_feathering():
+    """Test color-aware feathering functionality."""
+    feathering = EnhancedLassoFeathering()
+    
+    # Create test image with color gradients
+    img = np.zeros((100, 100, 3), dtype=np.uint8)
+    img[:, :, 0] = np.linspace(0, 255, 100).reshape(1, -1)  # Red gradient
+    img[:, :, 1] = np.linspace(0, 255, 100).reshape(-1, 1)  # Green gradient
+    img[:, :, 2] = 128  # Constant blue
+    
+    # Create circular mask
+    mask = np.zeros((100, 100), dtype=np.uint8)
+    cv2.circle(mask, (50, 50), 30, (255,), -1)
+    
+    # Test with different alpha values
+    for alpha in [0.01, 0.05, 0.1]:
+        result = feathering.apply_color_aware_feathering(img, mask, alpha)
+        assert result.shape == img.shape
+        assert not np.array_equal(result, img)  # Should modify the image
+        
+    # Test with invalid inputs
+    with pytest.raises(ValueError):
+        # Test with grayscale image
+        gray_img = np.zeros((100, 100), dtype=np.uint8)
+        feathering.apply_color_aware_feathering(gray_img, mask)
+
+def test_selection_mask_creation():
+    """Test selection mask creation with various point configurations."""
+    feathering = EnhancedLassoFeathering()
+    
+    # Test with insufficient points
+    points = [(10, 10), (20, 20)]  # Less than 3 points
+    mask = feathering.create_selection_mask(100, 100, points)
+    assert np.all(mask == 0)  # Should return empty mask
+    
+    # Test with valid polygon
+    points = [(10, 10), (20, 10), (15, 20)]  # Triangle
+    mask = feathering.create_selection_mask(100, 100, points)
+    assert np.any(mask > 0)  # Should contain some selected pixels
+    
+    # Test with complex polygon
+    points = [(10, 10), (50, 10), (50, 50), (10, 50)]  # Square
+    mask = feathering.create_selection_mask(100, 100, points)
+    assert np.any(mask > 0)  # Should contain some selected pixels
+    assert mask.shape == (100, 100)  # Should match specified dimensions 
+
+def test_feature_matrix_validation():
+    """Test feature matrix creation with invalid inputs."""
+    # Test with non-numpy array
+    class FakeArray:
+        def __init__(self):
+            self.shape = (10, 10)
+    with pytest.raises(ValueError, match="Image must be a numpy array"):
+        create_feature_matrix(FakeArray(), [(0, 0)])
+    
+    # Test with empty coordinates
+    img = np.zeros((10, 10), dtype=np.uint8)
+    with pytest.raises(ValueError, match="Coordinates list cannot be empty"):
+        create_feature_matrix(img, [])
+    
+    # Test with invalid patch size
+    with pytest.raises(ValueError, match="Patch size must be odd and >= 3"):
+        create_feature_matrix(img, [(0, 0)], patch_size=2)
+
+def test_feature_matrix_texture():
+    """Test texture feature extraction in feature matrix creation."""
+    # Create test image with specific texture patterns
+    img = np.zeros((50, 50, 3), dtype=np.uint8)
+    # Add different patterns to each channel
+    img[::2, ::2, 0] = 255  # Checkerboard in red channel
+    img[::3, ::3, 1] = 255  # Different pattern in green channel
+    img[::4, ::4, 2] = 255  # Different pattern in blue channel
+    
+    coords = [(25, 25)]  # Center point
+    features = create_feature_matrix(img, coords, patch_size=7)
+    
+    assert features.shape[0] == 1
+    assert features.shape[1] > 30  # Should have many features including texture
+
+def test_color_aware_feathering_validation():
+    """Test color-aware feathering with invalid inputs."""
+    feathering = EnhancedLassoFeathering()
+    
+    # Test with grayscale image
+    img = np.zeros((50, 50), dtype=np.uint8)
+    mask = np.zeros((50, 50), dtype=np.uint8)
+    with pytest.raises(ValueError, match=re.escape("Image must be a color image (3 channels)")):
+        feathering.apply_color_aware_feathering(img, mask)
+    
+    # Test with invalid mask shape
+    img = np.zeros((50, 50, 3), dtype=np.uint8)
+    invalid_mask = np.zeros((60, 60), dtype=np.uint8)
+    with pytest.raises(ValueError, match="Image and mask must have compatible shapes"):
+        feathering.apply_color_aware_feathering(img, invalid_mask)
+
+def test_selection_mask_complex():
+    """Test selection mask creation with complex shapes."""
+    feathering = EnhancedLassoFeathering()
+    
+    # Create a star-shaped selection
+    center = (50, 50)
+    points = []
+    for i in range(5):
+        angle = i * 2 * np.pi / 5
+        # Outer point
+        points.append((
+            int(center[0] + 40 * np.cos(angle)),
+            int(center[1] + 40 * np.sin(angle))
+        ))
+        # Inner point
+        angle += np.pi / 5
+        points.append((
+            int(center[0] + 20 * np.cos(angle)),
+            int(center[1] + 20 * np.sin(angle))
+        ))
+    
+    mask = feathering.create_selection_mask(100, 100, points)
+    assert mask.shape == (100, 100)
+    assert np.any(mask > 0)  # Should have selected pixels
+    assert isinstance(mask, np.ndarray)
+    assert mask.dtype == np.uint8
+
+def test_gabor_features_validation():
+    """Test Gabor feature computation with various inputs."""
+    # Test with minimum size patch
+    min_patch = np.ones((3, 3), dtype=np.uint8)
+    features = compute_gabor_features(min_patch)
+    assert len(features) == 16  # 4 orientations * 4 features
+    
+    # Test with larger patch
+    large_patch = np.random.randint(0, 255, (20, 20), dtype=np.uint8)
+    features = compute_gabor_features(large_patch, num_orientations=6)
+    assert len(features) == 24  # 6 orientations * 4 features
+
+def test_lbp_edge_cases():
+    """Test Local Binary Pattern computation with edge cases."""
+    # Test with minimum size patch
+    min_patch = np.ones((3, 3), dtype=np.uint8)
+    lbp = compute_lbp(min_patch)
+    assert lbp.shape == (3, 3)
+    assert lbp.dtype == np.uint8
+    
+    # Test with color patch
+    color_patch = np.random.randint(0, 255, (5, 5, 3), dtype=np.uint8)
+    lbp = compute_lbp(color_patch)
+    assert lbp.shape == (5, 5)
+    assert lbp.dtype == np.uint8 
+
+def test_comprehensive_coverage():
+    """Test to cover remaining edge cases and functionality."""
+    # Test color-aware feathering with various inputs
+    feathering = EnhancedLassoFeathering()
+    
+    # Create test image with specific patterns
+    img = np.zeros((50, 50, 3), dtype=np.uint8)
+    img[20:30, 20:30] = [255, 128, 64]  # Colored region
+    img[30:40, 30:40] = [64, 255, 128]  # Different colored region
+    
+    # Create mask with specific pattern
+    mask = np.zeros((50, 50), dtype=np.uint8)
+    mask[15:35, 15:35] = 255  # Selection area
+    
+    # Test color-aware feathering
+    result = feathering.apply_color_aware_feathering(img, mask, alpha=0.05)
+    assert result.shape == img.shape
+    assert not np.array_equal(result, img)
+    
+    # Test selection mask with complex shape
+    points = [(25, 25), (35, 25), (35, 35), (25, 35)]  # Square
+    mask = feathering.create_selection_mask(50, 50, points)
+    assert mask.shape == (50, 50)
+    assert np.any(mask > 0)
+    
+    # Test Gabor features with various inputs
+    patch = np.random.randint(0, 255, (15, 15), dtype=np.uint8)
+    features = compute_gabor_features(patch, num_orientations=8)
+    assert len(features) == 32  # 8 orientations * 4 features
+    
+    # Test LBP with various patterns
+    test_patterns = [
+        np.ones((5, 5), dtype=np.uint8) * 128,  # Uniform pattern
+        np.random.randint(0, 255, (7, 7), dtype=np.uint8),  # Random pattern
+        np.zeros((3, 3, 3), dtype=np.uint8)  # Color pattern
+    ]
+    
+    for pattern in test_patterns:
+        lbp = compute_lbp(pattern)
+        assert lbp.shape == pattern.shape[:2]
+        assert lbp.dtype == np.uint8
+    
+    # Test feature matrix with texture patterns
+    img_texture = np.zeros((30, 30, 3), dtype=np.uint8)
+    # Create checkerboard pattern
+    img_texture[::2, ::2] = [255, 0, 0]
+    img_texture[1::2, 1::2] = [0, 255, 0]
+    
+    coords = [(15, 15)]  # Center point
+    features = create_feature_matrix(img_texture, coords, patch_size=5)
+    assert features.shape[0] == 1
+    assert features.shape[1] > 40  # Should have many features including texture
+
+def test_advanced_feature_extraction():
+    """Test advanced feature extraction with various inputs."""
+    # Test color channel handling
+    img = np.zeros((30, 30, 3), dtype=np.uint8)
+    img[10:20, 10:20, 0] = 255  # Red square
+    img[15:25, 15:25, 1] = 255  # Green square overlapping
+    img[5:15, 5:15, 2] = 255   # Blue square overlapping
+    
+    coords = [(15, 15)]  # Point at intersection of all squares
+    features = create_feature_matrix(img, coords, patch_size=7)
+    assert features.shape[0] == 1
+    assert features.shape[1] > 50  # Should have many features including color interactions
+    
+    # Test texture feature extraction
+    img_texture = np.zeros((40, 40, 3), dtype=np.uint8)
+    # Create complex texture pattern
+    for i in range(3):  # For each channel
+        pattern = np.random.randint(0, 255, (40, 40), dtype=np.uint8)
+        img_texture[:, :, i] = pattern
+    
+    coords = [(20, 20)]  # Center point
+    features = create_feature_matrix(img_texture, coords, patch_size=9)
+    assert features.shape[0] == 1
+    assert features.shape[1] > 55  # Should have many features including texture
+    
+    # Test Gabor feature computation with edge cases
+    small_patch = np.ones((3, 3), dtype=np.uint8)
+    features_small = compute_gabor_features(small_patch, num_orientations=4)
+    assert len(features_small) == 16  # 4 orientations * 4 features
+    
+    large_patch = np.random.randint(0, 255, (25, 25), dtype=np.uint8)
+    features_large = compute_gabor_features(large_patch, num_orientations=6)
+    assert len(features_large) == 24  # 6 orientations * 4 features
+
+def test_final_coverage():
+    """Test to cover remaining edge cases and functionality."""
+    # Test color channel handling with various inputs
+    img = np.zeros((30, 30, 3), dtype=np.uint8)
+    img[10:20, 10:20] = [255, 128, 64]  # Add colored region
+    
+    # Test with different patch sizes
+    coords = [(15, 15)]
+    for patch_size in [5, 7, 9]:
+        features = create_feature_matrix(img, coords, patch_size)
+        assert features.shape[0] == 1
+        assert features.shape[1] > 40  # Should have many features
+    
+    # Test color-aware feathering with various inputs
+    feathering = EnhancedLassoFeathering()
+    
+    # Create test image with specific patterns
+    img = np.zeros((50, 50, 3), dtype=np.uint8)
+    img[20:30, 20:30] = [255, 128, 64]  # Colored region
+    img[30:40, 30:40] = [64, 255, 128]  # Different colored region
+    
+    # Create mask with specific pattern
+    mask = np.zeros((50, 50), dtype=np.uint8)
+    mask[15:35, 15:35] = 255  # Selection area
+    
+    # Test color-aware feathering with different parameters
+    result = feathering.apply_color_aware_feathering(img, mask, alpha=0.05)
+    assert result.shape == img.shape
+    assert not np.array_equal(result, img)
+    
+    # Test selection mask with complex shape
+    points = [(25, 25), (35, 25), (35, 35), (25, 35)]  # Square
+    mask = feathering.create_selection_mask(50, 50, points)
+    assert mask.shape == (50, 50)
+    assert np.any(mask > 0)
+    
+    # Test Gabor features with various inputs
+    patch = np.random.randint(0, 255, (15, 15), dtype=np.uint8)
+    features = compute_gabor_features(patch, num_orientations=8)
+    assert len(features) == 32  # 8 orientations * 4 features
+    
+    # Test texture feature extraction
+    img_texture = np.zeros((40, 40, 3), dtype=np.uint8)
+    # Create complex texture pattern
+    for i in range(3):  # For each channel
+        pattern = np.random.randint(0, 255, (40, 40), dtype=np.uint8)
+        img_texture[:, :, i] = pattern
+    
+    coords = [(20, 20)]  # Center point
+    features = create_feature_matrix(img_texture, coords, patch_size=9)
+    assert features.shape[0] == 1
+    assert features.shape[1] > 55  # Should have many features including texture
+
+def test_remaining_coverage():
+    """Test to cover remaining uncovered lines and edge cases."""
+    # Test color channel handling (line 94)
+    img_4ch = np.zeros((30, 30, 4), dtype=np.uint8)  # 4-channel image
+    with pytest.raises(ValueError, match="Image must be grayscale or BGR"):
+        feathering = EnhancedLassoFeathering()
+        feathering.apply_lasso_feathering(img_4ch, np.zeros((30, 30)))
+
+    # Test texture feature extraction (lines 120-122)
+    img_color = np.zeros((30, 30, 3), dtype=np.uint8)
+    img_color[10:20, 10:20] = [255, 128, 64]  # Add colored region
+    coords = [(15, 15)]
+    features = create_feature_matrix(img_color, coords, patch_size=7)
+    assert features.shape[1] > 40  # Should have texture features
+
+    # Test color-aware feathering validation and implementation (lines 382, 390-400)
+    feathering = EnhancedLassoFeathering()
+    img_lab = np.random.randint(0, 255, (50, 50, 3), dtype=np.uint8)
+    mask = np.zeros((50, 50), dtype=np.uint8)
+    mask[20:30, 20:30] = 255
+    
+    # Test with different alpha values and iterations
+    result = feathering.apply_color_aware_feathering(
+        img_lab.astype(np.float32) / 255.0,
+        mask,
+        alpha=0.1  # Increased alpha for better convergence
+    )
+    assert result.shape == img_lab.shape
+    assert not np.array_equal(result, img_lab)
+
+    # Test selection mask validation (line 422)
+    points = [(10, 10), (20, 10)]  # Less than 3 points
+    mask = feathering.create_selection_mask(30, 30, points)
+    assert np.all(mask == 0)  # Should return empty mask
+
+    # Test Gabor feature computation (line 450)
+    patch = np.random.randint(0, 255, (15, 15), dtype=np.uint8)
+    features = compute_gabor_features(patch, num_orientations=6)
+    assert len(features) == 24  # 6 orientations * 4 features
+    assert all(isinstance(f, float) for f in features)  # All features should be Python floats 
+
+def test_texture_feature_extraction():
+    """Test texture feature extraction with various edge cases."""
+    # Test with small patches and color channels
+    img = np.zeros((20, 20, 3), dtype=np.uint8)
+    # Create different patterns in each channel
+    img[::2, ::2, 0] = 255  # Checkerboard in red
+    img[::3, ::3, 1] = 255  # Different pattern in green
+    img[:10, :10, 2] = 255  # Solid area in blue
+    
+    # Test points near edges and corners
+    coords = [
+        (1, 1),    # Near corner
+        (10, 1),   # Near edge
+        (10, 10),  # Center
+        (18, 18)   # Near opposite corner
+    ]
+    
+    # Test with minimum patch size
+    features_min = create_feature_matrix(img, coords, patch_size=3)
+    assert features_min.shape[0] == len(coords)
+    assert features_min.shape[1] > 30  # Should include texture features
+    
+    # Test with larger patch size
+    features_large = create_feature_matrix(img, coords, patch_size=7)
+    assert features_large.shape[0] == len(coords)
+    assert features_large.shape[1] > 30
+    
+    # Verify no NaN or infinite values
+    assert not np.any(np.isnan(features_min))
+    assert not np.any(np.isinf(features_min))
+    assert not np.any(np.isnan(features_large))
+    assert not np.any(np.isinf(features_large))
+
+def test_edge_case_handling():
+    """Test edge case handling in feature extraction and processing."""
+    feathering = EnhancedLassoFeathering()
+    
+    # Test with 1-pixel wide image
+    narrow_img = np.random.rand(20, 1, 3).astype(np.float32)
+    narrow_mask = np.ones((20, 1), dtype=np.uint8)
+    with pytest.raises(ValueError, match="Image must be at least 3x3 pixels"):
+        feathering.apply_lasso_feathering(narrow_img, narrow_mask)
+    
+    # Test with 1-pixel high image
+    short_img = np.random.rand(1, 20, 3).astype(np.float32)
+    short_mask = np.ones((1, 20), dtype=np.uint8)
+    with pytest.raises(ValueError, match="Image must be at least 3x3 pixels"):
+        feathering.apply_lasso_feathering(short_img, short_mask)
+    
+    # Test with single-pixel image
+    single_img = np.random.rand(1, 1, 3).astype(np.float32)
+    single_mask = np.ones((1, 1), dtype=np.uint8)
+    with pytest.raises(ValueError, match="Image must be at least 3x3 pixels"):
+        feathering.apply_lasso_feathering(single_img, single_mask)
+
+def test_feature_extraction_validation_comprehensive():
+    """Test feature extraction validation and edge cases."""
+    # Test with invalid coordinates
+    img = np.random.rand(30, 30).astype(np.float32)
+    invalid_coords = [(31, 31)]  # Outside image bounds
+    with pytest.raises(ValueError, match="Coordinates outside image bounds"):
+        create_feature_matrix(img, invalid_coords)
+    
+    # Test with minimum size image
+    min_img = np.random.rand(3, 3).astype(np.float32)
+    min_coords = [(1, 1)]
+    features = create_feature_matrix(min_img, min_coords, patch_size=3)
+    assert features.shape[0] == 1
+    assert features.shape[1] > 10  # Should still extract basic features
+    
+    # Test with too small image
+    tiny_img = np.random.rand(2, 2).astype(np.float32)
+    with pytest.raises(ValueError, match="Image must be at least 3x3 pixels"):
+        create_feature_matrix(tiny_img, [(0, 0)])
+    
+    # Test with invalid patch sizes
+    with pytest.raises(ValueError, match="Patch size must be odd and >= 3"):
+        create_feature_matrix(img, [(15, 15)], patch_size=2)  # Even size
+    with pytest.raises(ValueError, match="Patch size must be odd and >= 3"):
+        create_feature_matrix(img, [(15, 15)], patch_size=1)  # Too small
+
+def test_gabor_feature_validation_extended():
+    """Test Gabor feature computation with various edge cases."""
+    # Test with invalid orientations
+    patch = np.random.rand(10, 10).astype(np.float32)
+    with pytest.raises(ValueError, match="Number of orientations must be positive"):
+        compute_gabor_features(patch, num_orientations=0)
+    
+    # Test with different numbers of orientations
+    for num_orientations in [2, 4, 6, 8]:
+        features = compute_gabor_features(patch, num_orientations=num_orientations)
+        assert len(features) == num_orientations * 4  # 4 features per orientation
+        assert all(isinstance(f, float) for f in features)
+        assert all(np.isfinite(f) for f in features)
+    
+    # Test with color patch
+    color_patch = np.random.rand(10, 10, 3).astype(np.float32)
+    features = compute_gabor_features(color_patch)
+    assert len(features) == 16  # Default 4 orientations * 4 features
+    
+    # Test with normalized vs unnormalized patches
+    patch_norm = patch / 255.0  # [0, 1] range
+    patch_unnorm = (patch * 255).astype(np.uint8)  # [0, 255] range
+    features_norm = compute_gabor_features(patch_norm)
+    features_unnorm = compute_gabor_features(patch_unnorm)
+    assert len(features_norm) == len(features_unnorm)
+
+def test_selection_mask_validation_extended():
+    """Test selection mask creation with edge cases."""
+    feathering = EnhancedLassoFeathering()
+    
+    # Test with invalid dimensions
+    with pytest.raises(ValueError, match="Width and height must be positive"):
+        feathering.create_selection_mask(0, 50, [(10, 10), (20, 20), (15, 30)])
+    with pytest.raises(ValueError, match="Width and height must be positive"):
+        feathering.create_selection_mask(50, -1, [(10, 10), (20, 20), (15, 30)])
+    
+    # Test with various point configurations
+    points_list = [
+        [],  # Empty list
+        [(10, 10)],  # Single point
+        [(10, 10), (20, 20)],  # Two points
+        [(10, 10), (20, 10), (15, 20)],  # Triangle
+        [(10, 10), (20, 10), (20, 20), (10, 20)]  # Square
+    ]
+    
+    for points in points_list:
+        mask = feathering.create_selection_mask(50, 50, points)
+        assert mask.shape == (50, 50)
+        assert mask.dtype == np.uint8
+        if len(points) < 3:
+            assert np.all(mask == 0)  # Should be empty
+        else:
+            assert np.any(mask > 0)  # Should have some selected pixels 
+
+def test_final_edge_cases():
+    """Test remaining edge cases for complete coverage."""
+    feathering = EnhancedLassoFeathering()
+    
+    # Test feature matrix creation edge cases
+    img = np.zeros((20, 20, 3), dtype=np.float32)
+    coords = [(5, 5), (15, 15)]
+    
+    # Test with sparse matrix conversion
+    X = scipy.sparse.csr_matrix(np.random.rand(10, 5))
+    X_dense = X.toarray() if scipy.sparse.issparse(X) else X
+    assert isinstance(X_dense, np.ndarray)
+    
+    # Test feature scaling with outliers
+    scaler = RobustScaler(quantile_range=(1, 99))
+    data = np.random.rand(100, 5)
+    data[0] = 1000  # Add outlier
+    scaled = scaler.fit_transform(data)
+    assert not np.any(np.abs(scaled) > 100)  # Outliers should be scaled down
+    
+    # Test Gabor feature computation with various inputs
+    patch = np.random.rand(10, 10).astype(np.float32)
+    for num_orientations in [3, 5, 7]:  # Test odd numbers of orientations
+        features = compute_gabor_features(patch, num_orientations=num_orientations)
+        assert len(features) == num_orientations * 4
+        assert all(isinstance(f, float) for f in features)
+    
+    # Test selection mask with complex shapes
+    points = [
+        (10, 10), (20, 10), (20, 20), (15, 25), (10, 20)  # Pentagon
+    ]
+    mask = feathering.create_selection_mask(30, 30, points)
+    assert mask.shape == (30, 30)
+    assert np.any(mask > 0)
+    
+    # Test color processing with extreme patterns
+    img_color = np.zeros((30, 30, 3), dtype=np.float32)
+    # Create high contrast patterns
+    x, y = np.meshgrid(np.linspace(0, 4*np.pi, 30), np.linspace(0, 4*np.pi, 30))
+    img_color[..., 0] = np.sin(x)
+    img_color[..., 1] = np.cos(y)
+    img_color[..., 2] = np.sin(x + y)
+    
+    mask_color = np.zeros((30, 30), dtype=np.uint8)
+    mask_color[5:25, 5:25] = 255
+    
+    result = feathering.apply_color_aware_feathering(img_color, mask_color, alpha=0.1)
+    assert result.shape == img_color.shape
+    assert not np.array_equal(result, img_color)
+    
+    # Test with various edge strengths
+    edge_strength = feathering.compute_edge_strength(img_color)
+    assert edge_strength.shape == img_color.shape[:2]
+    assert np.all(edge_strength >= 0) and np.all(edge_strength <= 1) 

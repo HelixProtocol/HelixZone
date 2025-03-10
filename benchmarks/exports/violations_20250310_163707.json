@@ -1,0 +1,2042 @@
+[
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:35.659512",
+    "value": 0.5175559399797964,
+    "threshold": 0.5175559399797964,
+    "severity": "critical",
+    "trend": "insufficient data"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:35.661225",
+    "value": 0.5738650074762849,
+    "threshold": 0.5203713933546209,
+    "severity": "critical",
+    "trend": "insufficient data"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:35.764387",
+    "value": 0.3607834609597277,
+    "threshold": 0.37646070886173455,
+    "severity": "critical",
+    "trend": "insufficient data"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:35.867319",
+    "value": 0.605673854719859,
+    "threshold": 0.384299332812738,
+    "severity": "critical",
+    "trend": "insufficient data"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:35.969007",
+    "value": 0.33564691345841724,
+    "threshold": 0.34067422295867933,
+    "severity": "critical",
+    "trend": "insufficient data"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:35.969899",
+    "value": 0.4879561576174697,
+    "threshold": 0.3419310503337448,
+    "severity": "critical",
+    "trend": "insufficient data"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:36.071331",
+    "value": 0.5419285155345445,
+    "threshold": 0.3431878777088104,
+    "severity": "critical",
+    "trend": "insufficient data"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:36.173254",
+    "value": 0.4898722802916782,
+    "threshold": 0.3444447050838759,
+    "severity": "critical",
+    "trend": "insufficient data"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:36.275024",
+    "value": 0.6181395562022235,
+    "threshold": 0.3457015324589414,
+    "severity": "critical",
+    "trend": "insufficient data"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:36.581308",
+    "value": 0.5659777745015049,
+    "threshold": 0.3469583598340069,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:36.683168",
+    "value": 0.44170273136841975,
+    "threshold": 0.34821518720907246,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:36.785414",
+    "value": 0.6778911770471753,
+    "threshold": 0.349472014584138,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:36.887750",
+    "value": 0.43065044365965555,
+    "threshold": 0.3507288419592035,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:36.989650",
+    "value": 0.4563287785580843,
+    "threshold": 0.351985669334269,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:37.091685",
+    "value": 0.5820541375230759,
+    "threshold": 0.35324249670933455,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:37.193810",
+    "value": 0.3455855271258966,
+    "threshold": 0.34310087370902675,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:37.195402",
+    "value": 0.43203671245344893,
+    "threshold": 0.34359780439240073,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:37.297402",
+    "value": 0.5610007483126793,
+    "threshold": 0.34409473507577465,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:37.399523",
+    "value": 0.45526369734339833,
+    "threshold": 0.3445916657591486,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:37.501456",
+    "value": 0.5077313910008031,
+    "threshold": 0.3450885964425226,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:38.007307",
+    "value": 0.4314838095080231,
+    "threshold": 0.3455855271258966,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:38.109234",
+    "value": 0.5791528090623972,
+    "threshold": 0.34634542381758815,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:38.211323",
+    "value": 0.36664090189958976,
+    "threshold": 0.34710532050927967,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:38.313348",
+    "value": 0.1825227172547348,
+    "threshold": 0.33713770550853916,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:38.315154",
+    "value": 0.425967274887181,
+    "threshold": 0.3376346361919131,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:38.417347",
+    "value": 0.46743957747793075,
+    "threshold": 0.33813156687528706,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:38.519528",
+    "value": 0.4017868312498739,
+    "threshold": 0.33862849755866103,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:36:38.622060",
+    "value": 109.4973942498517,
+    "threshold": 89.3077092819507,
+    "severity": "warning",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:38.622949",
+    "value": 0.49859523826359586,
+    "threshold": 0.339125428242035,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:38.725468",
+    "value": 0.326406492830273,
+    "threshold": 0.3301026610815307,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:39.529863",
+    "value": 0.38681645030917244,
+    "threshold": 0.33056468211293794,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:39.631619",
+    "value": 4.752723499419108,
+    "threshold": 3.3712692226314953,
+    "severity": "warning",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:39.633171",
+    "value": 0.38853041396363086,
+    "threshold": 0.3310267031443451,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:39.735491",
+    "value": 0.43837195565314924,
+    "threshold": 0.3314887241757523,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:39.838014",
+    "value": 0.5573605447165331,
+    "threshold": 0.33195074520715956,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:39.940208",
+    "value": 0.45880260512957394,
+    "threshold": 0.33241276623856675,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:40.042170",
+    "value": 0.22761386592475746,
+    "threshold": 0.2967687047586184,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:40.947075",
+    "value": 0.4833991146958483,
+    "threshold": 0.30170833610389414,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:41.051360",
+    "value": 0.22225756860206297,
+    "threshold": 0.22654260646021857,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:41.153448",
+    "value": 0.31965279320971085,
+    "threshold": 0.2268104213263533,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:41.255442",
+    "value": 0.2700321539978863,
+    "threshold": 0.22707823619248801,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:41.357506",
+    "value": 0.3011225987205092,
+    "threshold": 0.22734605105862274,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:42.363221",
+    "value": 0.5009860755109108,
+    "threshold": 0.22761386592475746,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:42.466905",
+    "value": 0.27832880202305554,
+    "threshold": 0.2297347803284139,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:42.569251",
+    "value": 0.41300989048228226,
+    "threshold": 0.23185569473207035,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:42.672405",
+    "value": 0.24323574495042155,
+    "threshold": 0.22995714777860707,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:43.878711",
+    "value": 0.16632271110225705,
+    "threshold": 0.22332882806660187,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:43.980877",
+    "value": 0.2690700247518553,
+    "threshold": 0.2235966429327366,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:45.086270",
+    "value": 0.16977295290137845,
+    "threshold": 0.19444317265893327,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:45.188163",
+    "value": 0.3885865156819169,
+    "threshold": 0.19642991522629966,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:45.189162",
+    "value": 4.6378949026184015,
+    "threshold": 3.5828841111590437,
+    "severity": "warning",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:45.190356",
+    "value": 0.17739880419790566,
+    "threshold": 0.1794483694206373,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:46.295746",
+    "value": 0.23879485180470095,
+    "threshold": 0.17970456507347876,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:46.298891",
+    "value": 0.06411611476977208,
+    "threshold": 0.17358587854964205,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:46.401082",
+    "value": 0.17832594999810153,
+    "threshold": 0.1739671711144684,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:46.503598",
+    "value": -0.0384377061076671,
+    "threshold": 0.1683928561817299,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:47.279987",
+    "value": 0.10255934214978973,
+    "threshold": 0.1440055319688935,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:47.281166",
+    "value": 0.23895498787226413,
+    "threshold": 0.14719370041651686,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:47.383731",
+    "value": 0.02633761506324689,
+    "threshold": 0.09294853530478532,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:47.486762",
+    "value": -0.04121983652735205,
+    "threshold": 0.056560414828467055,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:47.589053",
+    "value": 0.1846585945404115,
+    "threshold": 0.058449339813793307,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:48.694863",
+    "value": -0.12142880809521782,
+    "threshold": 0.019860082946155513,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:48.797178",
+    "value": -0.04434473367593447,
+    "threshold": -0.03857681262865135,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:48.899616",
+    "value": -0.012873111049333252,
+    "threshold": -0.0384377061076671,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:48.900449",
+    "value": 5.66117864360135,
+    "threshold": 4.103801121210025,
+    "severity": "warning",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:48.901483",
+    "value": 0.4170618379089771,
+    "threshold": -0.0371594763547504,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:50.006576",
+    "value": 3.311234667993197,
+    "threshold": 4.074129244465118,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:50.007858",
+    "value": -0.10854566153016308,
+    "threshold": -0.04094162348538355,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:51.312453",
+    "value": 3.8818872915108176,
+    "threshold": 4.044457367720209,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:51.313727",
+    "value": 0.037597200446447626,
+    "threshold": -0.0408025169643993,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:51.314830",
+    "value": 3.774368388147667,
+    "threshold": 4.039601471555411,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:51.315922",
+    "value": -0.0498968148877221,
+    "threshold": -0.04371975424621799,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:51.418107",
+    "value": 3.1124450272194597,
+    "threshold": 4.034745575390614,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:51.419288",
+    "value": -0.12131631545449202,
+    "threshold": -0.048508794584775194,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:51.520812",
+    "value": 4.29210710545483,
+    "threshold": 4.254959644794636,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:51.521915",
+    "value": 0.07364967064052061,
+    "threshold": -0.04823119052418581,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:51.623177",
+    "value": 3.2115601247889707,
+    "threshold": 4.242577157907905,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:51.624328",
+    "value": -0.1533044998650243,
+    "threshold": -0.08801856520530874,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:51.725619",
+    "value": 3.2965806213612723,
+    "threshold": 4.2301946710211755,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:51.726773",
+    "value": -0.09266738690393522,
+    "threshold": -0.10219435167967193,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:51.828583",
+    "value": 3.2252587124264562,
+    "threshold": 4.217812184134443,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:51.829716",
+    "value": 5.45165861057575,
+    "threshold": 4.516869173611151,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:51.830841",
+    "value": -0.17963933873411408,
+    "threshold": -0.115569521188544,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:51.932129",
+    "value": 2.9758366813414887,
+    "threshold": 4.499579783752971,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:51.933256",
+    "value": -0.14914023534708143,
+    "threshold": -0.12137256177485492,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:52.035041",
+    "value": 0.3155710041672424,
+    "threshold": -0.12136693714281863,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:52.035961",
+    "value": 5.870430639948953,
+    "threshold": 4.70105063085879,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:52.037232",
+    "value": -0.0006620223712474338,
+    "threshold": -0.12136131251078235,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:52.138491",
+    "value": 3.522159459461704,
+    "threshold": 4.695309201018755,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:52.139634",
+    "value": -0.013213791703460626,
+    "threshold": -0.12135568787874605,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:52.240875",
+    "value": 0.20024084391110428,
+    "threshold": -0.12135006324670976,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:52.241947",
+    "value": 5.13727974538517,
+    "threshold": 4.925773810103837,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:52.243029",
+    "value": -0.14534881209067718,
+    "threshold": -0.12740880909408267,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:52.344372",
+    "value": 3.4295622938283072,
+    "threshold": 4.90654599780553,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:52.345559",
+    "value": -0.05795145470343935,
+    "threshold": -0.1262128088943097,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:52.446795",
+    "value": 3.8327299280593614,
+    "threshold": 4.887318185507228,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:52.449706",
+    "value": -0.0710218707186536,
+    "threshold": -0.1250168086945367,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:52.551370",
+    "value": 3.3217699039389235,
+    "threshold": 4.868090373208926,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:52.552531",
+    "value": -0.06848513354204538,
+    "threshold": -0.12382080849476375,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:52.956535",
+    "value": -0.1512232527743903,
+    "threshold": -0.14553838325349738,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:53.058220",
+    "value": 3.320460784358321,
+    "threshold": 4.848862560910623,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:53.059427",
+    "value": -0.10058053562140129,
+    "threshold": -0.14534881209067718,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:36:53.160655",
+    "value": 123.3851975370425,
+    "threshold": 93.78710507025436,
+    "severity": "warning",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:53.161526",
+    "value": -0.11252807690229405,
+    "threshold": -0.14415281189090423,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:53.162298",
+    "value": 5.139998432978372,
+    "threshold": 5.13782348290381,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:53.163374",
+    "value": -0.06500538377502901,
+    "threshold": -0.14295681169113122,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:53.264620",
+    "value": 3.089447624358907,
+    "threshold": 5.13768754852415,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:53.265775",
+    "value": -0.1478146570295689,
+    "threshold": -0.14744478028873514,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:53.367705",
+    "value": 3.8745405834412767,
+    "threshold": 5.13755161414449,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:53.368890",
+    "value": -0.05351804318576012,
+    "threshold": -0.14732148804179054,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:53.470358",
+    "value": 3.206484362475541,
+    "threshold": 5.13741567976483,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:53.471632",
+    "value": -0.12766683180716082,
+    "threshold": -0.14719819579484597,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:53.572986",
+    "value": 5.253578198469633,
+    "threshold": 5.139998432978372,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:53.574147",
+    "value": 4.782835051045584,
+    "threshold": 5.139862498598712,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:53.575402",
+    "value": -0.14928847059259157,
+    "threshold": -0.14874256185182766,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:53.676664",
+    "value": 4.152413903184948,
+    "threshold": 5.1397265642190515,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:53.677861",
+    "value": 0.07714787514594004,
+    "threshold": -0.14867628293595203,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:53.779174",
+    "value": 2.8558340557816346,
+    "threshold": 5.139590629839391,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:53.780354",
+    "value": -0.27087131691687677,
+    "threshold": -0.14922917649438752,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:54.484507",
+    "value": -0.05173309174827556,
+    "threshold": -0.14922176473211202,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:54.587512",
+    "value": 3.905357283073713,
+    "threshold": 5.139454695459731,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:54.588824",
+    "value": -0.049825200904483474,
+    "threshold": -0.14921435296983648,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:54.690051",
+    "value": 3.690973384642738,
+    "threshold": 5.139318761080071,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:54.691335",
+    "value": -0.010065618560581302,
+    "threshold": -0.14920694120756098,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:54.792694",
+    "value": 3.9522947953055,
+    "threshold": 5.139182826700411,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:54.793998",
+    "value": -0.024931276530270774,
+    "threshold": -0.14919952944528547,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:54.895578",
+    "value": 3.3152932557469237,
+    "threshold": 5.139046892320751,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:54.896797",
+    "value": -0.1448370137915465,
+    "threshold": -0.14919211768300997,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:54.997964",
+    "value": 3.801183482210534,
+    "threshold": 5.138910957941091,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:54.999174",
+    "value": -0.02442311385209317,
+    "threshold": -0.14918470592073446,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:56.004475",
+    "value": 3.931010638599648,
+    "threshold": 5.138775023561431,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:56.005705",
+    "value": 0.01914539771670709,
+    "threshold": -0.14917729415845896,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:56.107359",
+    "value": 3.6381580579043837,
+    "threshold": 5.138639089181771,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:56.108597",
+    "value": -0.10297734984929713,
+    "threshold": -0.14916988239618345,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:56.210341",
+    "value": 3.6789605512998174,
+    "threshold": 5.138503154802111,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:56.211603",
+    "value": -0.011179103868673476,
+    "threshold": -0.14916247063390795,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:56.312738",
+    "value": 3.6997870472485594,
+    "threshold": 5.138367220422451,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:56.313944",
+    "value": -0.05170869600941741,
+    "threshold": -0.14915505887163244,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:56.314744",
+    "value": 6.360315169677229,
+    "threshold": 5.179751350900313,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:56.315567",
+    "value": 0.06806694156828678,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:57.420501",
+    "value": 4.071611554287491,
+    "threshold": 5.17407236262575,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:57.421771",
+    "value": 0.053924355432015694,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:57.523122",
+    "value": 3.9483329288209297,
+    "threshold": 5.1683933743511865,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:57.524329",
+    "value": -0.006428533012824242,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:58.729007",
+    "value": 4.017303841858393,
+    "threshold": 5.1627143860766225,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:58.730228",
+    "value": -0.023204683063990334,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:36:58.831480",
+    "value": 4.146043990950228,
+    "threshold": 5.15703539780206,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:36:58.832700",
+    "value": 0.05147188963983641,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:00.039091",
+    "value": 3.898617768463612,
+    "threshold": 5.151356409527497,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:00.040360",
+    "value": 0.033895405741988016,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:01.246007",
+    "value": 4.411928990963595,
+    "threshold": 5.145677421252935,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:01.347710",
+    "value": 4.103226798101104,
+    "threshold": 5.145677421252935,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:01.349021",
+    "value": 0.16221820705943032,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:01.350169",
+    "value": 4.538633595743704,
+    "threshold": 5.145677421252935,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:01.351265",
+    "value": 0.19688131446373341,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:01.452478",
+    "value": 4.224744963814346,
+    "threshold": 5.145677421252935,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:01.453647",
+    "value": 0.12407516674714614,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:01.555522",
+    "value": 4.538825144715016,
+    "threshold": 5.145677421252935,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:01.557105",
+    "value": 0.16690407642746613,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:01.658830",
+    "value": 4.61289321397473,
+    "threshold": 5.145677421252935,
+    "severity": "critical",
+    "trend": "increasing"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:01.660036",
+    "value": 0.14761229661163539,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "increasing"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:01.761333",
+    "value": 4.809949675934557,
+    "threshold": 5.145677421252935,
+    "severity": "critical",
+    "trend": "increasing"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:01.762504",
+    "value": 0.2228382641093814,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "increasing"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:01.863787",
+    "value": 3.7687318216545194,
+    "threshold": 5.145677421252935,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:01.865092",
+    "value": 0.06205832824820327,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:01.966480",
+    "value": 4.619740738367691,
+    "threshold": 5.145677421252935,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:01.967707",
+    "value": 0.15655135968779516,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:02.069355",
+    "value": 123.08330318017855,
+    "threshold": 96.94647483691509,
+    "severity": "warning",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:02.070395",
+    "value": -0.09461543144740572,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:02.071224",
+    "value": 6.751890165464689,
+    "threshold": 5.263482219074938,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:02.072034",
+    "value": 76.69641534908939,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:02.072761",
+    "value": 0.19458546444023428,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:02.174108",
+    "value": 4.415702277412652,
+    "threshold": 5.263482219074938,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:02.174864",
+    "value": 75.60121410265712,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:02.175593",
+    "value": 0.17834511818938903,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:02.276832",
+    "value": 4.537920029773822,
+    "threshold": 5.263482219074938,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:02.277569",
+    "value": 76.98764329546802,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:02.278292",
+    "value": 0.20348934145315448,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:02.379705",
+    "value": 4.5102844744920345,
+    "threshold": 5.263482219074938,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:02.380484",
+    "value": 74.72898109288502,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:02.381216",
+    "value": 0.12992060071762604,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:02.482943",
+    "value": 4.730588431111498,
+    "threshold": 5.263482219074938,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:02.483691",
+    "value": 82.05914893203206,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:02.484404",
+    "value": 0.2038084833049224,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:02.585707",
+    "value": 3.6386964326132816,
+    "threshold": 5.263482219074938,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:02.586532",
+    "value": 62.31563053832804,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:02.587261",
+    "value": -0.0013088806365850192,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:03.090020",
+    "value": 4.319118711040409,
+    "threshold": 5.263482219074938,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:03.090796",
+    "value": 74.94698861951674,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:03.091524",
+    "value": 0.1619424121898593,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:03.192794",
+    "value": 4.768619780730788,
+    "threshold": 5.263482219074938,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:03.193584",
+    "value": 0.3096311379585108,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:03.194612",
+    "value": 112.49032526089809,
+    "threshold": 99.8486451439741,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:03.195345",
+    "value": 0.15985802161114507,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:03.296767",
+    "value": 4.234494374677754,
+    "threshold": 5.263482219074938,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:03.297569",
+    "value": 64.33696167962589,
+    "threshold": 99.8486451439741,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:03.298282",
+    "value": 0.14971589562766058,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:03.399542",
+    "value": 4.661779427808865,
+    "threshold": 5.263482219074938,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:03.400216",
+    "value": 73.48871009523171,
+    "threshold": 99.8486451439741,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:03.400928",
+    "value": 0.12807507003691787,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:03.502212",
+    "value": 5.550438591631439,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:03.502968",
+    "value": 89.26307616845361,
+    "threshold": 99.8486451439741,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:03.503679",
+    "value": 0.3393763651110929,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:03.605273",
+    "value": 4.749379429359116,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:03.606190",
+    "value": 77.54880200855264,
+    "threshold": 99.8486451439741,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:03.606962",
+    "value": 0.2410328325338253,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:03.708317",
+    "value": 4.3296840327977275,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:03.709192",
+    "value": 67.71682560296021,
+    "threshold": 99.8486451439741,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:03.709928",
+    "value": 0.20003070055341868,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:03.811220",
+    "value": 5.30441898156966,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:03.811925",
+    "value": 83.5210353833637,
+    "threshold": 99.8486451439741,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:03.812640",
+    "value": 0.29912583674611015,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:03.914167",
+    "value": 4.723616642696846,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:03.914927",
+    "value": 69.80001818237635,
+    "threshold": 99.8486451439741,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:03.915643",
+    "value": 0.1665827285628893,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:04.719169",
+    "value": 5.2170759159187305,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:04.719952",
+    "value": 84.07326481782779,
+    "threshold": 99.8486451439741,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:04.720674",
+    "value": 0.29550987364392567,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:04.822025",
+    "value": 4.806007794476545,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:04.822870",
+    "value": 70.30973857520307,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:04.823649",
+    "value": 0.12256338805624827,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:04.924967",
+    "value": 4.661504114652763,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:04.925823",
+    "value": 62.573670345696186,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:04.926656",
+    "value": 0.13344768385247818,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:05.027920",
+    "value": 5.266649057086234,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:05.028650",
+    "value": 81.35054044237391,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:05.029389",
+    "value": 0.30694303118701927,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:05.130654",
+    "value": 4.986633850964773,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:05.131402",
+    "value": 74.37259871543009,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:05.132124",
+    "value": 0.175522695881147,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:05.233470",
+    "value": 5.195719842141722,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:05.234226",
+    "value": 78.66428787317379,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:05.235000",
+    "value": 0.21539827326662472,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:06.240043",
+    "value": 5.191543449870117,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:06.240938",
+    "value": 75.48476016270875,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:06.241688",
+    "value": 0.2103687388027929,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:06.343385",
+    "value": 5.373980002509405,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:06.344223",
+    "value": 86.36871183194165,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:06.345042",
+    "value": 0.33361004737238686,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:06.446451",
+    "value": 4.601513566440264,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:06.447267",
+    "value": 68.54720876014578,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:06.448029",
+    "value": 0.1584911301280954,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:06.549560",
+    "value": 4.8528283228358156,
+    "threshold": 5.456597609628534,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:06.550353",
+    "value": 77.05405031868898,
+    "threshold": 96.94647483691509,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:06.551094",
+    "value": 0.1970645767657873,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:06.551935",
+    "value": 8.772798411612605,
+    "threshold": 5.555975594229934,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:06.552731",
+    "value": 106.4051476442072,
+    "threshold": 99.74436035262198,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:06.553458",
+    "value": 0.005874495642341215,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:07.658481",
+    "value": 4.397424038082998,
+    "threshold": 5.555975594229934,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:07.659317",
+    "value": 62.75228491676546,
+    "threshold": 99.74436035262198,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:07.660071",
+    "value": 0.025643280557760828,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "memory_ratio",
+    "timestamp": "2025-03-10T16:37:07.761530",
+    "value": 5.139337450839065,
+    "threshold": 5.555975594229934,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:07.762304",
+    "value": 71.81523032690887,
+    "threshold": 99.74436035262198,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "gpu_utilization",
+    "timestamp": "2025-03-10T16:37:07.763048",
+    "value": 0.12046561678369361,
+    "threshold": -0.14914764710935693,
+    "severity": "critical",
+    "trend": "stable"
+  },
+  {
+    "metric_name": "cpu_threshold",
+    "timestamp": "2025-03-10T16:37:07.763841",
+    "value": 117.99133337325665,
+    "threshold": 106.50943243555933,
+    "severity": "critical",
+    "trend": "stable"
+  }
+]

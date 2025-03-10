@@ -1,14 +1,455 @@
-from typing import Optional, Tuple, List, Dict, Any, TYPE_CHECKING, cast, Union
+from typing import Optional, Tuple, List, Dict, Any, TYPE_CHECKING, cast, Union, Literal
 from PyQt6.QtCore import QPoint, Qt, QPointF
 from PyQt6.QtGui import QPainter, QPen, QColor, QPainterPath, QMouseEvent, QImage
 import numpy as np
 from numpy.typing import NDArray
 from .commands import DrawCommand
 import cv2
+from PyQt6.sip import voidptr
+import cupy as cp  # Import CuPy for CUDA support
+import pyopencl as cl  # Import PyOpenCL for AMD/Intel GPU support
+from concurrent.futures import ThreadPoolExecutor
+import threading
+from queue import Queue
+import time
+from .gpu import process_edges_gpu, process_edges_cpu, start_processing_thread, stop_processing_thread, _processing_queue
 
 if TYPE_CHECKING:
     from ..gui.canvas import Canvas
     from ..core.layer import Layer
+
+# GPU backend types
+GPUBackend = Literal['cuda', 'opencl', 'cpu']
+
+# Global thread pool for async operations
+_thread_pool = ThreadPoolExecutor(max_workers=4)
+_processing_queue: Queue = Queue()
+_processing_thread: Optional[threading.Thread] = None
+_is_processing = False
+
+# Global GPU manager instance
+_gpu_manager = None
+
+def start_processing_thread() -> None:
+    """Start the background processing thread if not already running."""
+    global _processing_thread, _is_processing
+    
+    if _processing_thread is None or not _processing_thread.is_alive():
+        _is_processing = True
+        _processing_thread = threading.Thread(target=process_queue, daemon=True)
+        if _processing_thread is not None:  # Type guard for mypy
+            _processing_thread.start()
+
+def process_queue() -> None:
+    """Process items in the queue until stopped."""
+    global _is_processing
+    
+    while _is_processing:
+        try:
+            if not _processing_queue.empty():
+                func, args, callback = _processing_queue.get_nowait()
+                try:
+                    result = func(*args)
+                    if callback:
+                        callback(result)
+                except Exception as e:
+                    print(f"Error in processing thread: {e}")
+            else:
+                time.sleep(0.01)  # Short sleep to prevent CPU spinning
+        except Exception as e:
+            print(f"Error in process_queue: {e}")
+            time.sleep(0.1)  # Longer sleep on error
+
+def stop_processing_thread() -> None:
+    """Stop the background processing thread."""
+    global _is_processing
+    _is_processing = False
+    if _processing_thread is not None:
+        _processing_thread.join(timeout=1.0)
+
+class GPUContext:
+    """Context manager for GPU memory management."""
+    def __init__(self):
+        self.arrays_to_free: List[cp.ndarray] = []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # Free all GPU arrays
+        for arr in self.arrays_to_free:
+            arr.get()  # Sync with CPU if needed
+            del arr
+        self.arrays_to_free.clear()
+        # Force garbage collection on GPU
+        cp.get_default_memory_pool().free_all_blocks()
+
+class GPUManager:
+    """Manages GPU operations across different backends (CUDA/OpenCL)."""
+    def __init__(self):
+        self.backend: GPUBackend = 'cpu'
+        self.cl_ctx: Optional[cl.Context] = None
+        self.cl_queue: Optional[cl.CommandQueue] = None
+        self.cl_prg: Optional[cl.Program] = None
+        
+        # Try to initialize GPU backends
+        try:
+            # Try CUDA first
+            cp.cuda.runtime.getDeviceCount()
+            self.backend = 'cuda'
+        except Exception:
+            try:
+                # Try OpenCL if CUDA is not available
+                platforms = cl.get_platforms()
+                if platforms:
+                    # Prefer AMD or discrete GPU platforms
+                    for platform in platforms:
+                        devices = platform.get_devices(device_type=cl.device_type.GPU)
+                        if devices:
+                            self.cl_ctx = cl.Context(devices=[devices[0]])
+                            self.cl_queue = cl.CommandQueue(self.cl_ctx)
+                            self._init_opencl_programs()
+                            self.backend = 'opencl'
+                            break
+            except Exception as e:
+                print(f"OpenCL initialization failed: {e}")
+                self.backend = 'cpu'
+
+    def _init_opencl_programs(self) -> None:
+        """Initialize OpenCL programs for edge detection."""
+        if not self.cl_ctx:
+            return
+
+        # OpenCL kernel for non-maximum suppression
+        nms_kernel = """
+        __kernel void non_maximum_suppression(
+            __global const float *strength,
+            __global const float *angle,
+            __global float *output,
+            const int width,
+            const int height
+        ) {
+            int x = get_global_id(0);
+            int y = get_global_id(1);
+            
+            if (x < 1 || x >= width - 1 || y < 1 || y >= height - 1) {
+                output[y * width + x] = 0;
+                return;
+            }
+            
+            float val = strength[y * width + x];
+            float ang = angle[y * width + x];
+            float n1, n2;
+            
+            // Quantize angle to 4 directions (0, 45, 90, 135 degrees)
+            int direction = ((int)round(ang * 4.0f / M_PI_F) + 4) % 4;
+            
+            switch (direction) {
+                case 0: // -45 degrees
+                    n1 = strength[(y-1) * width + (x-1)];
+                    n2 = strength[(y+1) * width + (x+1)];
+                    break;
+                case 1: // vertical
+                    n1 = strength[(y-1) * width + x];
+                    n2 = strength[(y+1) * width + x];
+                    break;
+                case 2: // 45 degrees
+                    n1 = strength[(y-1) * width + (x+1)];
+                    n2 = strength[(y+1) * width + (x-1)];
+                    break;
+                default: // horizontal
+                    n1 = strength[y * width + (x-1)];
+                    n2 = strength[y * width + (x+1)];
+                    break;
+            }
+            
+            output[y * width + x] = (val >= n1 && val >= n2) ? val : 0;
+        }
+        """
+        
+        try:
+            self.cl_prg = cl.Program(self.cl_ctx, nms_kernel).build()
+        except Exception as e:
+            print(f"Failed to build OpenCL program: {e}")
+            self.backend = 'cpu'
+
+    def get_backend(self) -> GPUBackend:
+        """Get the current GPU backend."""
+        return self.backend
+
+    def process_edges(
+        self,
+        gray: np.ndarray,
+        params: Dict[str, Any]
+    ) -> Dict[str, np.ndarray]:
+        """Process edges using the available GPU backend."""
+        if self.backend == 'cuda':
+            return self._process_edges_cuda(gray, params)
+        elif self.backend == 'opencl':
+            return self._process_edges_opencl(gray, params)
+        else:
+            return self._process_edges_cpu(gray, params)
+
+    def _process_edges_cuda(
+        self,
+        gray: np.ndarray,
+        params: Dict[str, Any]
+    ) -> Dict[str, np.ndarray]:
+        """Process edges using CUDA."""
+        try:
+            with GPUContext() as ctx:
+                # Transfer data to GPU
+                d_gray = cp.asarray(gray)
+                ctx.arrays_to_free.append(d_gray)
+
+                # Apply bilateral filter on GPU
+                d_gray_filtered = cp.asarray(cv2.bilateralFilter(
+                    cp.asnumpy(d_gray),
+                    d=params['d'],
+                    sigmaColor=params['sigmaColor'],
+                    sigmaSpace=params['sigmaSpace']
+                ))
+                ctx.arrays_to_free.append(d_gray_filtered)
+
+                # Convert to numpy array for OpenCV operations
+                gray_filtered_np = cp.asnumpy(d_gray_filtered)
+                gray_filtered_arr = np.asarray(gray_filtered_np, dtype=np.float64)
+                
+                # Compute adaptive thresholds using numpy operations
+                mean_intensity = float(np.mean(gray_filtered_arr))
+                std_intensity = float(np.std(gray_filtered_arr))
+                low_threshold = max(0, mean_intensity - std_intensity)
+                high_threshold = min(255, mean_intensity + std_intensity)
+
+                # Multi-scale edge detection
+                edges_fine = cv2.Canny(
+                    gray_filtered_np,
+                    low_threshold,
+                    high_threshold,
+                    apertureSize=3,
+                    L2gradient=True
+                )
+
+                gray_medium = cv2.GaussianBlur(gray_filtered_np, (5, 5), 1.5)
+                edges_medium = cv2.Canny(
+                    gray_medium,
+                    low_threshold * 0.8,
+                    high_threshold * 0.8,
+                    apertureSize=3,
+                    L2gradient=True
+                )
+
+                gray_coarse = cv2.GaussianBlur(gray_filtered_np, (9, 9), 2.5)
+                edges_coarse = cv2.Canny(
+                    gray_coarse,
+                    low_threshold * 0.6,
+                    high_threshold * 0.6,
+                    apertureSize=5,
+                    L2gradient=True
+                )
+
+                # Combine edges with weighted addition
+                edge_map = cv2.addWeighted(
+                    edges_fine.astype(np.float32),
+                    0.5,
+                    cv2.addWeighted(
+                        edges_medium.astype(np.float32),
+                        0.3,
+                        edges_coarse.astype(np.float32),
+                        0.2,
+                        0
+                    ),
+                    0.5,
+                    0
+                )
+
+                # Compute gradients
+                gradient_x = cv2.Sobel(gray_filtered_np, cv2.CV_32F, 1, 0, ksize=3)
+                gradient_y = cv2.Sobel(gray_filtered_np, cv2.CV_32F, 0, 1, ksize=3)
+
+                # Compute edge strength and gradient
+                edge_strength = np.sqrt(gradient_x**2 + gradient_y**2)
+                edge_gradient = np.arctan2(gradient_y, gradient_x)
+
+                # Normalize edge strength
+                edge_min = float(np.min(edge_strength))
+                edge_max = float(np.max(edge_strength))
+                if edge_max > edge_min:
+                    edge_strength = ((edge_strength - edge_min) * 255.0 / (edge_max - edge_min))
+
+                return {
+                    'edge_map': edge_map.astype(np.uint8),
+                    'edge_strength': edge_strength.astype(np.uint8),
+                    'edge_gradient': edge_gradient
+                }
+
+        except Exception as e:
+            print(f"CUDA processing error: {e}")
+            return self._process_edges_cpu(gray, params)
+
+    def _process_edges_opencl(
+        self,
+        gray: np.ndarray,
+        params: Dict[str, Any]
+    ) -> Dict[str, np.ndarray]:
+        """Process edges using OpenCL."""
+        try:
+            if not self.cl_ctx or not self.cl_queue or not self.cl_prg:
+                raise RuntimeError("OpenCL context not initialized")
+
+            # Create OpenCL buffers
+            gray_buf = cl.Buffer(
+                self.cl_ctx,
+                cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR,
+                hostbuf=gray.astype(np.float32)
+            )
+
+            # Apply bilateral filter (using CPU implementation for now)
+            gray_filtered = cv2.bilateralFilter(
+                gray,
+                d=params['d'],
+                sigmaColor=params['sigmaColor'],
+                sigmaSpace=params['sigmaSpace']
+            )
+
+            # Convert to float32 for OpenCL
+            gray_filtered_f32 = gray_filtered.astype(np.float32)
+            
+            # Create output buffers
+            height, width = gray.shape
+            output_shape = (height, width)
+            edge_map_buf = cl.Buffer(self.cl_ctx, cl.mem_flags.WRITE_ONLY, gray_filtered_f32.nbytes)
+            edge_strength_buf = cl.Buffer(self.cl_ctx, cl.mem_flags.WRITE_ONLY, gray_filtered_f32.nbytes)
+            edge_gradient_buf = cl.Buffer(self.cl_ctx, cl.mem_flags.WRITE_ONLY, gray_filtered_f32.nbytes)
+
+            # Execute OpenCL kernels
+            global_size = (width, height)
+            local_size = None  # Let OpenCL choose the work group size
+
+            # Non-maximum suppression kernel
+            self.cl_prg.non_maximum_suppression(
+                self.cl_queue,
+                global_size,
+                local_size,
+                edge_strength_buf,
+                edge_gradient_buf,
+                edge_map_buf,
+                np.int32(width),
+                np.int32(height)
+            )
+
+            # Read results back
+            edge_map = np.empty_like(gray_filtered_f32)
+            edge_strength = np.empty_like(gray_filtered_f32)
+            edge_gradient = np.empty_like(gray_filtered_f32)
+
+            cl.enqueue_copy(self.cl_queue, edge_map, edge_map_buf)
+            cl.enqueue_copy(self.cl_queue, edge_strength, edge_strength_buf)
+            cl.enqueue_copy(self.cl_queue, edge_gradient, edge_gradient_buf)
+
+            return {
+                'edge_map': edge_map.astype(np.uint8),
+                'edge_strength': edge_strength.astype(np.uint8),
+                'edge_gradient': edge_gradient
+            }
+
+        except Exception as e:
+            print(f"OpenCL processing error: {e}")
+            return self._process_edges_cpu(gray, params)
+
+    def _process_edges_cpu(
+        self,
+        gray: np.ndarray,
+        params: Dict[str, Any]
+    ) -> Dict[str, np.ndarray]:
+        """Process edges using CPU as fallback."""
+        try:
+            # Apply bilateral filter
+            gray_filtered = cv2.bilateralFilter(
+                gray,
+                d=params['d'],
+                sigmaColor=params['sigmaColor'],
+                sigmaSpace=params['sigmaSpace']
+            )
+
+            # Convert to float64 for accurate computations
+            gray_filtered_arr = np.asarray(gray_filtered, dtype=np.float64)
+            
+            # Compute adaptive thresholds
+            mean_intensity = float(np.mean(gray_filtered_arr))
+            std_intensity = float(np.std(gray_filtered_arr))
+            low_threshold = max(0, mean_intensity - std_intensity)
+            high_threshold = min(255, mean_intensity + std_intensity)
+
+            # Multi-scale edge detection
+            edges_fine = cv2.Canny(
+                gray_filtered,
+                low_threshold,
+                high_threshold,
+                apertureSize=3,
+                L2gradient=True
+            )
+
+            gray_medium = cv2.GaussianBlur(gray_filtered, (5, 5), 1.5)
+            edges_medium = cv2.Canny(
+                gray_medium,
+                low_threshold * 0.8,
+                high_threshold * 0.8,
+                apertureSize=3,
+                L2gradient=True
+            )
+
+            gray_coarse = cv2.GaussianBlur(gray_filtered, (9, 9), 2.5)
+            edges_coarse = cv2.Canny(
+                gray_coarse,
+                low_threshold * 0.6,
+                high_threshold * 0.6,
+                apertureSize=5,
+                L2gradient=True
+            )
+
+            # Combine edges
+            edge_map = cv2.addWeighted(
+                edges_fine.astype(np.float32),
+                0.5,
+                cv2.addWeighted(
+                    edges_medium.astype(np.float32),
+                    0.3,
+                    edges_coarse.astype(np.float32),
+                    0.2,
+                    0
+                ),
+                0.5,
+                0
+            )
+
+            # Compute gradients
+            gradient_x = cv2.Sobel(gray_filtered, cv2.CV_32F, 1, 0, ksize=3)
+            gradient_y = cv2.Sobel(gray_filtered, cv2.CV_32F, 0, 1, ksize=3)
+
+            # Compute edge strength and gradient
+            edge_strength = np.sqrt(gradient_x**2 + gradient_y**2)
+            edge_gradient = np.arctan2(gradient_y, gradient_x)
+
+            # Normalize edge strength
+            edge_min = float(np.min(edge_strength))
+            edge_max = float(np.max(edge_strength))
+            if edge_max > edge_min:
+                edge_strength = ((edge_strength - edge_min) * 255.0 / (edge_max - edge_min))
+
+            return {
+                'edge_map': edge_map.astype(np.uint8),
+                'edge_strength': edge_strength.astype(np.uint8),
+                'edge_gradient': edge_gradient
+            }
+
+        except Exception as e:
+            print(f"CPU processing error: {e}")
+            return {
+                'edge_map': np.zeros_like(gray, dtype=np.uint8),
+                'edge_strength': np.zeros_like(gray, dtype=np.uint8),
+                'edge_gradient': np.zeros_like(gray, dtype=np.float32)
+            }
 
 class Tool:
     """Base class for all tools."""
@@ -929,7 +1370,7 @@ class LassoSelection(SelectionTool):
             # Add final points and close the path
             if len(self.points) >= 3:
                 # Add the final point if it's different from the last one
-                if not self.points or not np.allclose(
+                if not np.allclose(
                     [pos.x(), pos.y()],
                     [self.points[-1].x(), self.points[-1].y()],
                     rtol=1e-5
@@ -973,9 +1414,6 @@ class LassoSelection(SelectionTool):
                 else:
                     self.canvas.clear_selection()
                     self.is_selecting = False
-            else:
-                self.canvas.clear_selection()
-                self.is_selecting = False
             
             # Reset states
             self.is_drawing = False
@@ -1087,6 +1525,47 @@ class MagneticLassoSelection(LassoSelection):
         self.edge_gradient: Optional[np.ndarray] = None
         self.edge_strength: Optional[np.ndarray] = None
         self.debug_mode = False  # Toggle for debug visualization
+        self._cached_image_hash: Optional[int] = None  # For caching
+        self._cached_edge_data: Optional[Dict[str, np.ndarray]] = None  # Edge detection cache
+        self._use_gpu = True  # Enable GPU acceleration by default
+        self._processing_future = None
+        
+        # Start the processing thread
+        start_processing_thread()
+
+    def __del__(self):
+        """Cleanup resources when the tool is destroyed."""
+        stop_processing_thread()
+
+    def _compute_image_hash(self, image: QImage) -> int:
+        """Compute a hash of the image for caching purposes."""
+        # Convert QImage to ARGB32 format if needed
+        if image.format() != QImage.Format.Format_ARGB32:
+            image = image.convertToFormat(QImage.Format.Format_ARGB32)
+            
+        width = image.width()
+        height = image.height()
+        
+        # Get the raw bytes in a format numpy can understand
+        bits = image.constBits()
+        if bits is None:
+            return 0
+            
+        # Tell Qt how many bytes we want to read
+        bits.setsize(height * width * 4)
+        
+        # Create numpy array and compute hash
+        # Use type: ignore to suppress the linter error since we know this works at runtime
+        arr = np.frombuffer(bits, dtype=np.uint8).reshape(height, width, 4)  # type: ignore
+        return hash(arr.tobytes())
+
+    def cleanup_edge_detection(self) -> None:
+        """Clean up edge detection resources."""
+        self.edge_map = None
+        self.edge_strength = None
+        self.edge_gradient = None
+        self._cached_image_hash = None
+        self._cached_edge_data = None
 
     def update_edge_detection(self) -> None:
         """Update edge detection with enhanced sensitivity and noise handling."""
@@ -1096,64 +1575,129 @@ class MagneticLassoSelection(LassoSelection):
                 self.cleanup_edge_detection()
                 return
 
+            # Check cache
+            current_hash = self._compute_image_hash(layer.image)
+            if (self._cached_image_hash == current_hash and 
+                self._cached_edge_data is not None):
+                self.edge_map = self._cached_edge_data.get('edge_map')
+                self.edge_strength = self._cached_edge_data.get('edge_strength')
+                self.edge_gradient = self._cached_edge_data.get('edge_gradient')
+                return
+
             # Convert QImage to numpy array
             image = layer.image
+            if image.format() != QImage.Format.Format_ARGB32:
+                image = image.convertToFormat(QImage.Format.Format_ARGB32)
+                
             width = image.width()
             height = image.height()
-            ptr = image.constBits()
-            if ptr is None:
+            bits = image.constBits()
+            if bits is None:
                 self.cleanup_edge_detection()
                 return
                 
-            ptr.setsize(height * width * 4)
-            arr = np.array(ptr).reshape(height, width, 4).copy()  # Create a copy to avoid reference issues
+            bits.setsize(height * width * 4)
+            arr = np.frombuffer(bits, dtype=np.uint8).reshape(height, width, 4).copy()  # type: ignore
 
-            # Convert to grayscale with proper weighting
+            # Convert to grayscale
             gray = cv2.cvtColor(arr, cv2.COLOR_BGRA2GRAY)
             del arr  # Free memory
 
-            # Apply bilateral filter to reduce noise while preserving edges
-            gray = cv2.bilateralFilter(gray, d=5, sigmaColor=50, sigmaSpace=50)
+            # Set up processing parameters
+            params = {
+                'd': 9,
+                'sigmaColor': 75,
+                'sigmaSpace': 75
+            }
 
-            # Multi-scale edge detection
-            edges_fine = cv2.Canny(gray, self.edge_contrast, self.edge_contrast * 2)
-            edges_coarse = cv2.Canny(cv2.GaussianBlur(gray, (5, 5), 0), 
-                                    self.edge_contrast * 0.5, 
-                                    self.edge_contrast)
+            # Queue the processing task
+            _processing_queue.put((
+                process_edges_gpu if self._use_gpu else process_edges_cpu,
+                (gray, params),
+                self._edge_detection_callback
+            ))
 
-            # Combine multi-scale edges
-            self.edge_map = cv2.addWeighted(edges_fine, 0.7, edges_coarse, 0.3, 0)
-
-            # Compute edge strength for better snapping
-            gradient_x = cv2.Sobel(gray, cv2.CV_32F, 1, 0, ksize=3)
-            gradient_y = cv2.Sobel(gray, cv2.CV_32F, 0, 1, ksize=3)
-            self.edge_strength = np.sqrt(gradient_x**2 + gradient_y**2)
-            self.edge_gradient = np.arctan2(gradient_y, gradient_x)
-            
-            del gradient_x, gradient_y  # Free memory
-
-            # Normalize edge strength
-            edge_min = np.min(self.edge_strength)
-            edge_max = np.max(self.edge_strength)
-            if edge_max > edge_min:
-                self.edge_strength = ((self.edge_strength - edge_min) * 255.0 / (edge_max - edge_min)).astype(np.uint8)
-            else:
-                self.edge_strength = np.zeros_like(self.edge_strength, dtype=np.uint8)
-
-            if self.debug_mode:
-                self._debug_edge_detection(gray, edges_fine, edges_coarse)
-                
-            del edges_fine, edges_coarse, gray  # Free memory
-            
         except Exception as e:
             print(f"Error in update_edge_detection: {e}")
             self.cleanup_edge_detection()
 
-    def cleanup_edge_detection(self) -> None:
-        """Clean up edge detection resources."""
-        self.edge_map = None
-        self.edge_strength = None
-        self.edge_gradient = None
+    def _edge_detection_callback(self, result: Dict[str, np.ndarray]) -> None:
+        """Callback for when edge detection processing is complete."""
+        try:
+            self.edge_map = result['edge_map']
+            self.edge_strength = result['edge_strength']
+            self.edge_gradient = result['edge_gradient']
+            
+            # Apply non-maximum suppression if we have valid data
+            if all(v is not None for v in [self.edge_map, self.edge_strength, self.edge_gradient]):
+                self._apply_non_maximum_suppression()
+            
+            # Update the cache
+            self._cached_edge_data = result
+            layer = self.canvas.layer_stack.get_active_layer()
+            if layer is not None and hasattr(layer, 'image'):
+                self._cached_image_hash = self._compute_image_hash(layer.image)
+            
+            # Force a canvas update
+            self.canvas.update()
+            
+        except Exception as e:
+            print(f"Error in edge detection callback: {e}")
+
+    def _apply_non_maximum_suppression(self) -> None:
+        """Apply non-maximum suppression to refine edges."""
+        if any(v is None for v in [self.edge_map, self.edge_strength, self.edge_gradient]):
+            return
+            
+        try:
+            # Ensure we have valid numpy arrays
+            edge_map = np.asarray(self.edge_map)
+            edge_strength = np.asarray(self.edge_strength)
+            edge_gradient = np.asarray(self.edge_gradient)
+            
+            height, width = edge_map.shape
+            angle_quantized = (np.round(edge_gradient * 4 / np.pi) + 4) % 4
+            suppressed = np.zeros_like(edge_strength)
+            
+            # Use GPU if available
+            if self._use_gpu:
+                # Let the GPU handle the suppression
+                result = process_edges_gpu(
+                    edge_strength,
+                    {
+                        'operation': 'nms',
+                        'angle': angle_quantized,
+                        'width': width,
+                        'height': height
+                    }
+                )
+                suppressed = result['edge_strength']
+            else:
+                # CPU fallback
+                for i in range(1, height - 1):
+                    for j in range(1, width - 1):
+                        if edge_map[i, j] == 0:
+                            continue
+                            
+                        angle = angle_quantized[i, j]
+                        strength = edge_strength[i, j]
+                        
+                        if angle == 0:  # -45 degrees
+                            neighbors = [edge_strength[i-1, j-1], edge_strength[i+1, j+1]]
+                        elif angle == 1:  # vertical
+                            neighbors = [edge_strength[i-1, j], edge_strength[i+1, j]]
+                        elif angle == 2:  # 45 degrees
+                            neighbors = [edge_strength[i-1, j+1], edge_strength[i+1, j-1]]
+                        else:  # horizontal
+                            neighbors = [edge_strength[i, j-1], edge_strength[i, j+1]]
+                        
+                        if strength >= max(neighbors):
+                            suppressed[i, j] = strength
+            
+            self.edge_strength = suppressed
+            
+        except Exception as e:
+            print(f"Error in non-maximum suppression: {e}")
 
     def find_edge_point(self, pos: QPointF) -> QPointF:
         """Enhanced edge point detection with sub-pixel accuracy."""

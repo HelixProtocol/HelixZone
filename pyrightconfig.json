@@ -9,5 +9,8 @@
     "venv": ".venv",
     "typeCheckingMode": "basic",
     "reportMissingImports": true,
-    "reportMissingModuleSource": false
+    "reportMissingModuleSource": false,
+    "ignore": [
+        "**/memory_profiler.py"
+    ]
 }

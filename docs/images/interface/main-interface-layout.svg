@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+    <!-- Definitions -->
+    <defs>
+        <!-- Panel Gradients -->
+        <linearGradient id="toolbar-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#f8f9fa;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#e9ecef;stop-opacity:1"/>
+        </linearGradient>
+        
+        <!-- Shadow Filter -->
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+            <feOffset dx="0" dy="1" result="offsetblur"/>
+            <feComponentTransfer>
+                <feFuncA type="linear" slope="0.2"/>
+            </feComponentTransfer>
+            <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+    
+    <!-- Main Window Background -->
+    <rect width="1200" height="800" fill="#f8f9fa"/>
+    
+    <!-- Menu Bar -->
+    <g id="menu-bar">
+        <rect width="1200" height="30" fill="url(#toolbar-gradient)"/>
+        <text x="20" y="20" font-family="Arial" font-size="12">File</text>
+        <text x="60" y="20" font-family="Arial" font-size="12">Edit</text>
+        <text x="100" y="20" font-family="Arial" font-size="12">View</text>
+        <text x="140" y="20" font-family="Arial" font-size="12">Image</text>
+        <text x="190" y="20" font-family="Arial" font-size="12">Layer</text>
+        <text x="240" y="20" font-family="Arial" font-size="12">Select</text>
+        <text x="290" y="20" font-family="Arial" font-size="12">Filter</text>
+        <text x="330" y="20" font-family="Arial" font-size="12">Help</text>
+    </g>
+    
+    <!-- Tool Bar -->
+    <g id="toolbar" transform="translate(0,30)">
+        <rect width="40" height="770" fill="url(#toolbar-gradient)" filter="url(#shadow)"/>
+        <!-- Tool Icons from tool-icons.svg -->
+        <use href="tool-icons.svg#rectangle-selection" transform="translate(4,4)"/>
+        <use href="tool-icons.svg#ellipse-selection" transform="translate(4,40)"/>
+        <use href="tool-icons.svg#lasso" transform="translate(4,76)"/>
+        <use href="tool-icons.svg#magnetic-lasso" transform="translate(4,112)"/>
+        <use href="tool-icons.svg#brush" transform="translate(4,148)"/>
+        <use href="tool-icons.svg#eraser" transform="translate(4,184)"/>
+    </g>
+    
+    <!-- Canvas Area -->
+    <g id="canvas-area" transform="translate(40,30)">
+        <rect width="920" height="770" fill="#ffffff" filter="url(#shadow)"/>
+        <!-- Canvas Grid (subtle) -->
+        <path d="M0,0 L920,0 L920,770 L0,770 Z" 
+              stroke="#e9ecef" stroke-width="1" fill="none" 
+              stroke-dasharray="4 4"/>
+    </g>
+    
+    <!-- Right Panel Area -->
+    <g id="right-panels" transform="translate(960,30)">
+        <rect width="240" height="770" fill="url(#toolbar-gradient)" filter="url(#shadow)"/>
+        
+        <!-- Layers Panel -->
+        <g id="layers-panel" transform="translate(0,0)">
+            <rect width="240" height="385" fill="#ffffff"/>
+            <rect width="240" height="30" fill="url(#toolbar-gradient)"/>
+            <text x="10" y="20" font-family="Arial" font-size="12" font-weight="bold">Layers</text>
+            
+            <!-- Layer Items -->
+            <g transform="translate(0,30)">
+                <rect width="240" height="40" fill="#f8f9fa"/>
+                <text x="30" y="25" font-family="Arial" font-size="12">Layer 1</text>
+            </g>
+            <g transform="translate(0,70)">
+                <rect width="240" height="40" fill="#ffffff"/>
+                <text x="30" y="25" font-family="Arial" font-size="12">Background</text>
+            </g>
+        </g>
+        
+        <!-- Properties Panel -->
+        <g id="properties-panel" transform="translate(0,385)">
+            <rect width="240" height="385" fill="#ffffff"/>
+            <rect width="240" height="30" fill="url(#toolbar-gradient)"/>
+            <text x="10" y="20" font-family="Arial" font-size="12" font-weight="bold">Properties</text>
+            
+            <!-- Tool Options -->
+            <g transform="translate(10,40)">
+                <text x="0" y="20" font-family="Arial" font-size="12">Size:</text>
+                <rect x="50" y="10" width="100" height="15" fill="#e9ecef" rx="3"/>
+                
+                <text x="0" y="50" font-family="Arial" font-size="12">Opacity:</text>
+                <rect x="50" y="40" width="100" height="15" fill="#e9ecef" rx="3"/>
+                
+                <text x="0" y="80" font-family="Arial" font-size="12">Flow:</text>
+                <rect x="50" y="70" width="100" height="15" fill="#e9ecef" rx="3"/>
+            </g>
+        </g>
+    </g>
+    
+    <!-- Status Bar -->
+    <g id="status-bar" transform="translate(0,780)">
+        <rect width="1200" height="20" fill="url(#toolbar-gradient)"/>
+        <text x="10" y="15" font-family="Arial" font-size="11">Ready</text>
+        <text x="1100" y="15" font-family="Arial" font-size="11">100%</text>
+    </g>
+</svg> 

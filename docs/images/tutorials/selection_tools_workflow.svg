@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- Common Styles -->
+        <style type="text/css">
+            .step-title { font-family: Arial; font-size: 14px; font-weight: bold; }
+            .step-desc { font-family: Arial; font-size: 12px; }
+            .shortcut { font-family: 'Courier New'; font-size: 12px; fill: #2196F3; }
+            .warning { font-family: Arial; font-size: 12px; fill: #FF5722; }
+        </style>
+        
+        <!-- Step Container -->
+        <g id="step-container">
+            <rect width="280" height="200" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+            <rect width="280" height="30" rx="5" fill="#f5f5f5" stroke="#e0e0e0"/>
+        </g>
+        
+        <!-- Tool Preview -->
+        <g id="tool-preview">
+            <rect width="240" height="120" rx="3" fill="#fafafa" stroke="#e0e0e0"/>
+        </g>
+        
+        <!-- Arrow Marker -->
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#2196F3"/>
+        </marker>
+    </defs>
+    
+    <!-- Title -->
+    <text x="20" y="40" font-family="Arial" font-size="24" font-weight="bold">
+        Selection Tools Workflow
+    </text>
+    <text x="20" y="70" font-family="Arial" font-size="14">
+        Master the art of precise selections with these essential tools
+    </text>
+    
+    <!-- Step 1: Rectangle Selection -->
+    <g transform="translate(20,100)">
+        <use href="#step-container"/>
+        <text x="10" y="20" class="step-title">1. Rectangle Selection</text>
+        <use href="#tool-preview" x="20" y="40"/>
+        
+        <!-- Tool Preview Content -->
+        <rect x="50" y="70" width="80" height="60" 
+              fill="none" stroke="#2196F3" stroke-width="2" stroke-dasharray="4 2"/>
+        
+        <!-- Instructions -->
+        <text x="20" y="180" class="step-desc">• Click and drag to create</text>
+        <text x="20" y="195" class="shortcut">Shortcut: M</text>
+        <text x="120" y="195" class="step-desc">+ Shift for square</text>
+    </g>
+    
+    <!-- Step 2: Elliptical Selection -->
+    <g transform="translate(320,100)">
+        <use href="#step-container"/>
+        <text x="10" y="20" class="step-title">2. Elliptical Selection</text>
+        <use href="#tool-preview" x="20" y="40"/>
+        
+        <!-- Tool Preview Content -->
+        <ellipse cx="90" cy="100" rx="40" ry="30" 
+                 fill="none" stroke="#2196F3" stroke-width="2" stroke-dasharray="4 2"/>
+        
+        <!-- Instructions -->
+        <text x="20" y="180" class="step-desc">• Click and drag to create</text>
+        <text x="20" y="195" class="shortcut">Shortcut: M</text>
+        <text x="120" y="195" class="step-desc">+ Shift for circle</text>
+    </g>
+    
+    <!-- Step 3: Lasso Selection -->
+    <g transform="translate(620,100)">
+        <use href="#step-container"/>
+        <text x="10" y="20" class="step-title">3. Lasso Selection</text>
+        <use href="#tool-preview" x="20" y="40"/>
+        
+        <!-- Tool Preview Content -->
+        <path d="M70,80 C90,70 110,75 120,90 C130,105 120,120 100,125 C80,130 60,120 70,80" 
+              fill="none" stroke="#2196F3" stroke-width="2" stroke-dasharray="4 2"/>
+        
+        <!-- Instructions -->
+        <text x="20" y="180" class="step-desc">• Draw freehand selection</text>
+        <text x="20" y="195" class="shortcut">Shortcut: L</text>
+    </g>
+    
+    <!-- Selection Modifiers -->
+    <g transform="translate(20,320)">
+        <rect width="880" height="120" rx="5" fill="#f8f9fa" stroke="#e0e0e0"/>
+        <text x="20" y="30" class="step-title">Selection Modifiers</text>
+        
+        <!-- Add to Selection -->
+        <g transform="translate(20,50)">
+            <text x="0" y="0" class="step-desc">Add to Selection</text>
+            <text x="0" y="20" class="shortcut">Hold Shift</text>
+        </g>
+        
+        <!-- Subtract from Selection -->
+        <g transform="translate(200,50)">
+            <text x="0" y="0" class="step-desc">Subtract from Selection</text>
+            <text x="0" y="20" class="shortcut">Hold Alt</text>
+        </g>
+        
+        <!-- Intersect Selection -->
+        <g transform="translate(400,50)">
+            <text x="0" y="0" class="step-desc">Intersect Selection</text>
+            <text x="0" y="20" class="shortcut">Hold Shift + Alt</text>
+        </g>
+        
+        <!-- Transform Selection -->
+        <g transform="translate(600,50)">
+            <text x="0" y="0" class="step-desc">Transform Selection</text>
+            <text x="0" y="20" class="shortcut">Ctrl + T</text>
+        </g>
+    </g>
+    
+    <!-- Best Practices -->
+    <g transform="translate(20,460)">
+        <rect width="880" height="160" rx="5" fill="#e3f2fd" stroke="#90caf9"/>
+        <text x="20" y="30" font-family="Arial" font-size="16" font-weight="bold">Best Practices</text>
+        
+        <!-- Tips -->
+        <g transform="translate(20,50)">
+            <text x="0" y="0" class="step-desc">• Start with the most appropriate tool for your subject</text>
+            <text x="0" y="20" class="step-desc">• Use feathering for natural-looking selections</text>
+            <text x="0" y="40" class="step-desc">• Zoom in for precise edge selection</text>
+            <text x="0" y="60" class="step-desc">• Save complex selections for future use</text>
+        </g>
+        
+        <!-- Warning -->
+        <g transform="translate(400,50)">
+            <text x="0" y="0" class="warning">Common Pitfalls:</text>
+            <text x="0" y="20" class="warning">• Forgetting to feather edges</text>
+            <text x="0" y="40" class="warning">• Not using appropriate zoom level</text>
+            <text x="0" y="60" class="warning">• Ignoring selection modifiers</text>
+        </g>
+    </g>
+    
+    <!-- Quick Reference -->
+    <g transform="translate(920,100)">
+        <rect width="260" height="520" rx="5" fill="#fff3e0" stroke="#ffe0b2"/>
+        <text x="20" y="30" font-family="Arial" font-size="16" font-weight="bold">Quick Reference</text>
+        
+        <!-- Shortcuts List -->
+        <g transform="translate(20,50)">
+            <text x="0" y="0" class="step-desc">Essential Shortcuts:</text>
+            <text x="0" y="25" class="shortcut">Ctrl + A</text>
+            <text x="70" y="25" class="step-desc">Select All</text>
+            
+            <text x="0" y="50" class="shortcut">Ctrl + D</text>
+            <text x="70" y="50" class="step-desc">Deselect</text>
+            
+            <text x="0" y="75" class="shortcut">Ctrl + Shift + I</text>
+            <text x="70" y="75" class="step-desc">Invert Selection</text>
+            
+            <text x="0" y="100" class="shortcut">Alt + Click</text>
+            <text x="70" y="100" class="step-desc">Center Selection</text>
+            
+            <text x="0" y="125" class="shortcut">[ ]</text>
+            <text x="70" y="125" class="step-desc">Adjust Feather</text>
+        </g>
+        
+        <!-- Tool Options -->
+        <g transform="translate(20,200)">
+            <text x="0" y="0" class="step-desc">Tool Options:</text>
+            <text x="0" y="25" class="step-desc">• Feather Radius</text>
+            <text x="0" y="50" class="step-desc">• Anti-alias</text>
+            <text x="0" y="75" class="step-desc">• Style (Normal/Fixed)</text>
+            <text x="0" y="100" class="step-desc">• Width/Height</text>
+        </g>
+        
+        <!-- Selection Tips -->
+        <g transform="translate(20,350)">
+            <text x="0" y="0" class="step-desc">Pro Tips:</text>
+            <text x="0" y="25" class="step-desc">• Double-click to select layer</text>
+            <text x="0" y="50" class="step-desc">• Right-click for context menu</text>
+            <text x="0" y="75" class="step-desc">• Space + drag to reposition</text>
+            <text x="0" y="100" class="step-desc">• Enter to confirm transform</text>
+        </g>
+    </g>
+</svg> 

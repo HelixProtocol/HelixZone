@@ -1,0 +1,86 @@
+name: Performance Benchmarks
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Allow manual trigger
+  workflow_dispatch:
+  # Run weekly to track long-term trends
+  schedule:
+    - cron: '0 0 * * 0'  # Every Sunday at midnight
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10']
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libopencv-dev python3-opencv
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install psutil gputil memory_profiler torch tensorboard
+    
+    - name: Run benchmarks
+      run: |
+        mkdir -p benchmarks/history
+        python benchmarks/benchmark_feathering.py
+    
+    - name: Run performance profiling
+      run: |
+        mkdir -p benchmarks/profiles
+        python benchmarks/profile_performance.py
+    
+    - name: Process benchmark results
+      run: |
+        # Save results with timestamp
+        cp benchmarks/results.md "benchmarks/history/results_$(date +%Y%m%d_%H%M%S).md"
+        
+        # Generate trend analysis
+        python benchmarks/analyze_trends.py
+      
+    - name: Upload benchmark results
+      uses: actions/upload-artifact@v3
+      with:
+        name: benchmark-results-${{ matrix.python-version }}
+        path: |
+          benchmarks/results.md
+          benchmarks/history/
+          benchmarks/trends.md
+          benchmarks/profiles/
+    
+    - name: Check for performance regression
+      run: python benchmarks/check_regression.py
+      
+    - name: Update benchmark badge
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        python benchmarks/update_badge.py
+        
+    - name: Commit benchmark results
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add benchmarks/history/
+        git add benchmarks/trends.md
+        git add benchmarks/profiles/
+        git commit -m "Update benchmark results and profiles [skip ci]" || echo "No changes to commit"
+        git push 

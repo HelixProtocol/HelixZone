@@ -1,0 +1,722 @@
+{
+    "version": "1.0.0",
+    "last_updated": "2024-03-10",
+    "categories": {
+        "interface": {
+            "main-window": {
+                "interface-main-window-01.png": {
+                    "description": "Main application window with labeled components",
+                    "usage": [
+                        "user_guide.md",
+                        "quick_start.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                },
+                "interface-panels-01.png": {
+                    "description": "Dockable panels and their arrangement",
+                    "usage": [
+                        "user_guide.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                },
+                "interface-toolbar-01.png": {
+                    "description": "Main toolbar with tool descriptions",
+                    "usage": [
+                        "user_guide.md",
+                        "quick_start.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                },
+                "main-interface-layout.svg": {
+                    "description": "Complete interface layout mockup",
+                    "usage": [
+                        "user_guide.md",
+                        "quick_start.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                },
+                "annotated-interface.svg": {
+                    "description": "Annotated interface mockup with feature explanations",
+                    "usage": [
+                        "user_guide.md",
+                        "quick_start.md",
+                        "tutorials/interface_overview.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                }
+            },
+            "menus": {
+                "interface-file-menu-01.png": {
+                    "description": "File menu options",
+                    "usage": [
+                        "user_guide.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                },
+                "interface-edit-menu-01.png": {
+                    "description": "Edit menu options",
+                    "usage": [
+                        "user_guide.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                }
+            }
+        },
+        "tools": {
+            "icons": {
+                "tool-icons.svg": {
+                    "description": "Complete set of tool icons",
+                    "usage": [
+                        "user_guide.md",
+                        "quick_start.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                }
+            },
+            "selection": {
+                "tools-lasso-01.png": {
+                    "description": "Lasso tool interface and options",
+                    "usage": [
+                        "user_guide.md",
+                        "quick_start.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                },
+                "tools-magnetic-lasso-01.png": {
+                    "description": "Magnetic lasso tool with edge detection",
+                    "usage": [
+                        "user_guide.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                }
+            },
+            "brush": {
+                "tools-brush-options-01.png": {
+                    "description": "Brush tool options panel",
+                    "usage": [
+                        "user_guide.md",
+                        "quick_start.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                }
+            }
+        },
+        "tutorials": {
+            "basic-editing": {
+                "tutorial-new-project-01.png": {
+                    "description": "Creating a new project",
+                    "usage": [
+                        "quick_start.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                },
+                "tutorial-basic-tools-01.png": {
+                    "description": "Basic tools overview",
+                    "usage": [
+                        "quick_start.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                }
+            },
+            "selection_tools_workflow.svg": {
+                "description": "Comprehensive guide to selection tools with shortcuts and best practices",
+                "usage": [
+                    "user_guide.md",
+                    "tutorials/selection_tools.md",
+                    "quick_start.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0"
+            },
+            "photo_retouching_workflow.svg": {
+                "description": "Step-by-step photo retouching workflow with tool references",
+                "usage": [
+                    "user_guide.md",
+                    "tutorials/photo_editing.md",
+                    "quick_start.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0"
+            },
+            "layer_operations_workflow.svg": {
+                "description": "Complete guide to layer management and operations",
+                "usage": [
+                    "user_guide.md",
+                    "tutorials/layers.md",
+                    "quick_start.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0"
+            },
+            "magnetic_lasso_workflow.svg": {
+                "description": "Step-by-step workflow for using the Magnetic Lasso tool",
+                "usage": [
+                    "tutorials/selection_tools.md",
+                    "user_guide.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0"
+            },
+            "photo_enhancement_workflow.svg": {
+                "description": "Professional photo enhancement workflow diagram",
+                "usage": [
+                    "tutorials/photo_enhancement.md",
+                    "user_guide.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0"
+            },
+            "interactive_layer_operations.svg": {
+                "description": "Interactive guide to layer management with hover tooltips and visual feedback",
+                "usage": [
+                    "user_guide.md",
+                    "tutorials/layers.md",
+                    "quick_start.md",
+                    "interactive_tutorials.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0",
+                "interactive": true
+            },
+            "interactive_selection_tools.svg": {
+                "description": "Interactive guide to selection tools with live demonstrations and tooltips",
+                "usage": [
+                    "user_guide.md",
+                    "tutorials/selection_tools.md",
+                    "quick_start.md",
+                    "interactive_tutorials.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0",
+                "interactive": true,
+                "features": [
+                    "Live demonstrations",
+                    "Interactive tooltips",
+                    "Visual feedback",
+                    "Best practices"
+                ]
+            },
+            "interactive_photo_enhancement.svg": {
+                "description": "Interactive photo enhancement workflow tutorial with before/after previews and tooltips for each step",
+                "usage_references": [
+                    "user_guide.md",
+                    "tutorials/photo_enhancement.md",
+                    "quick_start.md",
+                    "interactive_tutorials.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0",
+                "is_interactive": true,
+                "features": [
+                    "hover_tooltips",
+                    "before_after_previews",
+                    "tool_shortcuts",
+                    "best_practices",
+                    "quick_tips"
+                ]
+            },
+            "interactive_filter_effects.svg": {
+                "description": "Interactive filter effects guide with live previews, parameter controls, and tooltips",
+                "usage_references": [
+                    "user_guide.md",
+                    "tutorials/filters.md",
+                    "quick_start.md",
+                    "interactive_tutorials.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0",
+                "is_interactive": true,
+                "features": [
+                    "hover_tooltips",
+                    "parameter_controls",
+                    "before_after_previews",
+                    "best_practices",
+                    "quick_tips"
+                ]
+            }
+        },
+        "workflows": {
+            "photo-enhancement": {
+                "workflow-photo-enhancement-01.svg": {
+                    "description": "Photo enhancement workflow diagram",
+                    "usage": [
+                        "user_guide.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                },
+                "magnetic-lasso-workflow-01.svg": {
+                    "description": "Magnetic lasso tool workflow diagram",
+                    "usage": [
+                        "user_guide.md",
+                        "quick_start.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                }
+            },
+            "basic_editing.svg": {
+                "description": "Basic image editing workflow",
+                "usage": [
+                    "quick_start.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0"
+            }
+        },
+        "troubleshooting": {
+            "performance_optimization_guide.svg": {
+                "description": "Comprehensive guide for optimizing application performance",
+                "usage": [
+                    "troubleshooting.md",
+                    "user_guide.md",
+                    "installation_guide.md",
+                    "performance_guide.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0"
+            },
+            "interactive_troubleshooting_flow.svg": {
+                "description": "Interactive flowchart for diagnosing and solving common issues",
+                "usage": [
+                    "troubleshooting.md",
+                    "user_guide.md",
+                    "quick_start.md",
+                    "installation_guide.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0"
+            },
+            "error_recovery_guide.svg": {
+                "description": "Comprehensive guide for common errors and their solutions",
+                "usage": [
+                    "troubleshooting.md",
+                    "user_guide.md",
+                    "installation_guide.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0"
+            },
+            "installation": {
+                "troubleshoot-gpu-error-01.png": {
+                    "description": "GPU detection error message",
+                    "usage": [
+                        "installation_guide.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                },
+                "troubleshoot-opencv-error-01.png": {
+                    "description": "OpenCV import error",
+                    "usage": [
+                        "installation_guide.md"
+                    ],
+                    "last_updated": "2024-03-10",
+                    "version_compatibility": ">=1.0.0"
+                }
+            },
+            "common_errors.svg": {
+                "description": "Visual guide to common error messages",
+                "usage": [
+                    "troubleshooting.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0"
+            },
+            "interactive_error_recovery.svg": {
+                "description": "Interactive guide for diagnosing and resolving common errors with live demonstrations",
+                "usage_references": [
+                    "troubleshooting.md",
+                    "user_guide.md",
+                    "installation_guide.md",
+                    "interactive_tutorials.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0",
+                "is_interactive": true,
+                "features": [
+                    "clickable_solutions",
+                    "hover_tooltips",
+                    "step_by_step_recovery",
+                    "prevention_tips",
+                    "quick_recovery_steps"
+                ]
+            },
+            "interactive_performance_guide.svg": {
+                "description": "Enhanced interactive performance optimization guide with comprehensive workflow profiles, detailed metrics, profile comparison, and intelligent profile combination capabilities",
+                "usage_references": [
+                    "troubleshooting.md",
+                    "user_guide.md",
+                    "performance_guide.md",
+                    "interactive_tutorials.md",
+                    "workflow_optimization.md"
+                ],
+                "last_updated": "2024-03-10",
+                "version_compatibility": ">=1.0.0",
+                "is_interactive": true,
+                "features": [
+                    "real_time_metrics",
+                    "interactive_graphs",
+                    "granular_performance_metrics",
+                    "operation_latency_breakdown",
+                    "memory_fragmentation_analysis",
+                    "io_bottleneck_detection",
+                    "gpu_compute_memory_split",
+                    "performance_trend_indicators",
+                    "workflow_optimization_profiles",
+                    "performance_analysis_timeline",
+                    "resource_monitoring",
+                    "advanced_optimization_tips",
+                    "profile_comparison",
+                    "real_time_impact_analysis",
+                    "profile_combination",
+                    "smart_resource_allocation",
+                    "conflict_resolution",
+                    "compatibility_checking"
+                ],
+                "workflow_profiles": [
+                    {
+                        "name": "photo_editing",
+                        "features": [
+                            "high_gpu_priority",
+                            "large_cache",
+                            "filter_optimization",
+                            "4k_support"
+                        ],
+                        "settings": {
+                            "gpu_priority": "high",
+                            "cache_size": "4GB",
+                            "thread_count": "auto",
+                            "preview_quality": "high"
+                        }
+                    },
+                    {
+                        "name": "high_res_compositing",
+                        "features": [
+                            "smart_layer_caching",
+                            "memory_optimization",
+                            "tile_based_processing",
+                            "8k_resolution_support"
+                        ],
+                        "settings": {
+                            "cache_per_layer": "8GB",
+                            "tile_size": "2048px",
+                            "min_gpu_memory": "6GB",
+                            "swap_enabled": true
+                        }
+                    },
+                    {
+                        "name": "video_frame_editing",
+                        "features": [
+                            "frame_sequence_cache",
+                            "io_optimization",
+                            "memory_preallocation",
+                            "timeline_buffering"
+                        ],
+                        "settings": {
+                            "frame_buffer": 120,
+                            "read_ahead": 30,
+                            "cache_size": "4GB",
+                            "hardware_acceleration": true
+                        }
+                    },
+                    {
+                        "name": "ai_enhanced_editing",
+                        "features": [
+                            "model_optimization",
+                            "inference_pipeline",
+                            "batch_processing",
+                            "gpu_memory_management"
+                        ],
+                        "settings": {
+                            "model_cache": "2GB",
+                            "batch_size": 4,
+                            "fp16_enabled": true,
+                            "tensorrt_enabled": true
+                        }
+                    },
+                    {
+                        "name": "hdr_processing",
+                        "features": [
+                            "32bit_color_depth",
+                            "exposure_stacking",
+                            "tone_mapping",
+                            "color_management"
+                        ],
+                        "settings": {
+                            "color_space": "ACEScg",
+                            "lut_size": "32³",
+                            "cache_size": "6GB",
+                            "gpu_required": true
+                        }
+                    },
+                    {
+                        "name": "panorama_stitching",
+                        "features": [
+                            "feature_detection",
+                            "image_alignment",
+                            "blending_pipeline",
+                            "memory_management"
+                        ],
+                        "settings": {
+                            "sift_points": 8000,
+                            "blend_mode": "multi",
+                            "cache_size": "8GB",
+                            "cpu_threads": "max"
+                        }
+                    },
+                    {
+                        "name": "focus_stacking",
+                        "features": [
+                            "edge_detection",
+                            "depth_mapping",
+                            "smart_blending",
+                            "artifact_removal"
+                        ],
+                        "settings": {
+                            "radius": "8px",
+                            "smoothing": 3,
+                            "preview": "real-time",
+                            "gpu_preferred": true
+                        }
+                    }
+                ],
+                "comparison_features": {
+                    "metrics": [
+                        "gpu_usage",
+                        "memory_consumption",
+                        "cache_size",
+                        "latency"
+                    ],
+                    "visualization": [
+                        "side_by_side_comparison",
+                        "difference_highlighting",
+                        "impact_analysis",
+                        "resource_requirements"
+                    ],
+                    "interactive_elements": [
+                        "profile_switching",
+                        "real_time_preview",
+                        "requirement_checking",
+                        "optimization_suggestions"
+                    ]
+                },
+                "combination_features": {
+                    "selection": {
+                        "multi_profile_selection": true,
+                        "compatibility_check": true,
+                        "resource_estimation": true,
+                        "impact_analysis": true
+                    },
+                    "optimization": {
+                        "dynamic_resource_allocation": true,
+                        "pipeline_optimization": true,
+                        "conflict_resolution": true,
+                        "performance_monitoring": true,
+                        "thermal_management": true,
+                        "workload_balancing": true
+                    },
+                    "resource_estimation": {
+                        "metrics": [
+                            "gpu_memory_usage",
+                            "system_memory",
+                            "storage_buffer",
+                            "cpu_utilization",
+                            "thermal_impact",
+                            "power_consumption"
+                        ],
+                        "visualization": [
+                            "usage_bars",
+                            "impact_indicators",
+                            "requirement_gauges",
+                            "thermal_monitoring"
+                        ],
+                        "analysis": [
+                            "bottleneck_prediction",
+                            "resource_conflicts",
+                            "performance_impact",
+                            "optimization_suggestions"
+                        ]
+                    },
+                    "common_combinations": [
+                        {
+                            "name": "HDR Panorama",
+                            "profiles": [
+                                "hdr_processing",
+                                "panorama_stitching"
+                            ],
+                            "optimizations": [
+                                "memory_management",
+                                "gpu_pipeline"
+                            ],
+                            "requirements": {
+                                "gpu_memory": "12GB",
+                                "system_ram": "16GB",
+                                "storage": "50GB",
+                                "cpu_cores": 6
+                            }
+                        },
+                        {
+                            "name": "AI Focus Stack",
+                            "profiles": [
+                                "focus_stacking",
+                                "ai_enhanced_editing"
+                            ],
+                            "optimizations": [
+                                "gpu_memory",
+                                "batch_processing"
+                            ],
+                            "requirements": {
+                                "gpu_memory": "8GB",
+                                "system_ram": "12GB",
+                                "storage": "30GB",
+                                "cpu_cores": 4
+                            }
+                        },
+                        {
+                            "name": "High-Res HDR",
+                            "profiles": [
+                                "high_res_compositing",
+                                "hdr_processing"
+                            ],
+                            "optimizations": [
+                                "tile_processing",
+                                "color_management"
+                            ],
+                            "requirements": {
+                                "gpu_memory": "16GB",
+                                "system_ram": "32GB",
+                                "storage": "100GB",
+                                "cpu_cores": 8
+                            }
+                        },
+                        {
+                            "name": "AI Video Enhancement",
+                            "profiles": [
+                                "video_frame_editing",
+                                "ai_enhanced_editing"
+                            ],
+                            "optimizations": [
+                                "frame_pipeline",
+                                "gpu_acceleration"
+                            ],
+                            "requirements": {
+                                "gpu_memory": "12GB",
+                                "system_ram": "16GB",
+                                "storage": "200GB",
+                                "cpu_cores": 8
+                            }
+                        },
+                        {
+                            "name": "Batch HDR Focus Stack",
+                            "profiles": [
+                                "batch_processing",
+                                "hdr_processing",
+                                "focus_stacking"
+                            ],
+                            "optimizations": [
+                                "parallel_processing",
+                                "memory_pooling"
+                            ],
+                            "requirements": {
+                                "gpu_memory": "16GB",
+                                "system_ram": "32GB",
+                                "storage": "150GB",
+                                "cpu_cores": 12
+                            }
+                        },
+                        {
+                            "name": "AI Panorama Retouch",
+                            "profiles": [
+                                "panorama_stitching",
+                                "ai_enhanced_editing"
+                            ],
+                            "optimizations": [
+                                "adaptive_pipeline",
+                                "smart_caching"
+                            ],
+                            "requirements": {
+                                "gpu_memory": "16GB",
+                                "system_ram": "24GB",
+                                "storage": "80GB",
+                                "cpu_cores": 8
+                            }
+                        }
+                    ],
+                    "optimization_strategies": {
+                        "pipeline": {
+                            "parallel_processing": {
+                                "description": "Optimize task distribution across CPU cores and GPU",
+                                "settings": {
+                                    "thread_allocation": "dynamic",
+                                    "gpu_streams": "auto",
+                                    "batch_size": "adaptive"
+                                }
+                            },
+                            "memory_management": {
+                                "description": "Smart memory allocation and caching strategies",
+                                "settings": {
+                                    "cache_policy": "lru",
+                                    "prefetch": "enabled",
+                                    "compression": "auto"
+                                }
+                            },
+                            "io_optimization": {
+                                "description": "Optimize data transfer and storage operations",
+                                "settings": {
+                                    "read_ahead": "enabled",
+                                    "write_cache": "enabled",
+                                    "buffer_size": "dynamic"
+                                }
+                            }
+                        },
+                        "conflict_resolution": {
+                            "resource_priority": {
+                                "description": "Manage resource allocation conflicts",
+                                "rules": [
+                                    "gpu_first",
+                                    "memory_balance",
+                                    "io_throttling"
+                                ]
+                            },
+                            "workload_balancing": {
+                                "description": "Balance processing load across resources",
+                                "strategies": [
+                                    "load_distribution",
+                                    "priority_scheduling",
+                                    "resource_pooling"
+                                ]
+                            }
+                        },
+                        "monitoring": {
+                            "metrics": [
+                                "resource_usage",
+                                "thermal_state",
+                                "performance_counters",
+                                "bottleneck_detection"
+                            ],
+                            "alerts": {
+                                "resource_threshold": "80%",
+                                "thermal_threshold": "85C",
+                                "performance_degradation": "20%"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
