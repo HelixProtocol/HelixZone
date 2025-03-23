@@ -20,9 +20,9 @@ def create_sample_image(path: Path) -> None:
     print("Creating a sample test image...")
     img = np.zeros((512, 512), dtype=np.uint8)
     # Add some shapes
-    cv2.circle(img, (256, 256), 100, (255,), 2)
-    cv2.rectangle(img, (100, 100), (400, 400), (255,), 2)
-    cv2.line(img, (50, 50), (450, 450), (255,), 2)
+    cv2.circle(img, (256, 256), 100, 255, 2)
+    cv2.rectangle(img, (100, 100), (400, 400), 255, 2)
+    cv2.line(img, (50, 50), (450, 450), 255, 2)
     # Save the image
     save_image(path, img)
     print(f"Created sample image at {path}")

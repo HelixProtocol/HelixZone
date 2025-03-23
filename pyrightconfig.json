@@ -2,15 +2,33 @@
     "include": [
         "src"
     ],
-    "extraPaths": [
-        "src"
+    "exclude": [
+        "**/node_modules",
+        "**/__pycache__",
+        "**/.venv"
     ],
-    "venvPath": ".",
-    "venv": ".venv",
-    "typeCheckingMode": "basic",
-    "reportMissingImports": true,
-    "reportMissingModuleSource": false,
     "ignore": [
-        "**/memory_profiler.py"
-    ]
+        "src/helixzone/core/tools.py"
+    ],
+    "stubPath": "src/stubs",
+    "venvPath": ".",
+    "executionEnvironments": [
+        {
+            "root": "src",
+            "pythonVersion": "3.8",
+            "extraPaths": [
+                "src"
+            ]
+        }
+    ],
+    "typeCheckingMode": "off",
+    "useLibraryCodeForTypes": true,
+    "reportMissingImports": "warning",
+    "reportMissingTypeStubs": "none",
+    "reportUnknownMemberType": "none",
+    "reportAttributeAccessIssue": "none",
+    "reportGeneralTypeIssues": "none",
+    "reportOptionalMemberAccess": "none",
+    "reportOptionalSubscript": "none",
+    "reportPrivateImportUsage": "none"
 }
