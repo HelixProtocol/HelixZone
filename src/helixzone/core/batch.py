@@ -30,9 +30,9 @@ class BatchProcessor:
             
             # Remove completed futures
             self._futures = [f for f in self._futures if not f.done()]
-            
-        return results
         
+        return results
+
     def process_edges_async(self, image: NDArray[np.uint8], params: Dict[str, Any]) -> Future:
         """Process edges asynchronously."""
         future = self._executor.submit(self._gpu_manager.process_edges, image, params)

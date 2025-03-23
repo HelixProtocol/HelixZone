@@ -1,26 +1,28 @@
 """Machine learning utilities for HelixZone."""
 
+from __future__ import annotations
 import numpy as np
+from numpy.typing import NDArray
 from sklearn.linear_model import Lasso, ElasticNet
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.preprocessing import StandardScaler, RobustScaler
 import cv2
-from typing import Dict, List, Union, Optional, Tuple, Any, TypeVar, cast
+from typing import Dict, List, Union, Optional, Tuple, Any, TypeVar, cast, Protocol
 from scipy.ndimage import gaussian_filter
 from scipy.ndimage import sobel
 import scipy.sparse
 
 # Type aliases for better readability
-ImageType = TypeVar('ImageType', bound=np.ndarray)
-MaskType = TypeVar('MaskType', bound=np.ndarray)
-FeatureMatrix = np.ndarray
+ImageType = TypeVar('ImageType', bound=NDArray[np.uint8])
+MaskType = TypeVar('MaskType', bound=NDArray[np.uint8])
+FeatureMatrix = NDArray[np.float32]
 Coordinates = List[Tuple[int, int]]
 
 def lasso_selection_performance(
-    X: np.ndarray,
-    y: np.ndarray,
-    alpha_range: Optional[np.ndarray] = None
+    X: NDArray[np.float32],
+    y: NDArray[np.float32],
+    alpha_range: Optional[NDArray[np.float32]] = None
 ) -> Dict[str, List[Union[float, int]]]:
     """Evaluate Lasso regression performance across different alpha values.
 
