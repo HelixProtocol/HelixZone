@@ -45,6 +45,9 @@ htmlcov/
 coverage.xml
 .tox/
 nosetests.xml
+test_summary.md
+violations_*.csv
+violations_*.json
 
 # Generated documentation
 docs/_build/
