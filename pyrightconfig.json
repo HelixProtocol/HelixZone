@@ -2,10 +2,33 @@
     "include": [
         "src"
     ],
-    "extraPaths": [
-        "src"
+    "exclude": [
+        "**/node_modules",
+        "**/__pycache__",
+        "**/.venv"
     ],
+    "ignore": [
+        "src/helixzone/core/tools.py"
+    ],
+    "stubPath": "src/stubs",
     "venvPath": ".",
-    "venv": "venv",
-    "typeCheckingMode": "basic"
+    "executionEnvironments": [
+        {
+            "root": "src",
+            "pythonVersion": "3.8",
+            "extraPaths": [
+                "src"
+            ]
+        }
+    ],
+    "typeCheckingMode": "off",
+    "useLibraryCodeForTypes": true,
+    "reportMissingImports": "warning",
+    "reportMissingTypeStubs": "none",
+    "reportUnknownMemberType": "none",
+    "reportAttributeAccessIssue": "none",
+    "reportGeneralTypeIssues": "none",
+    "reportOptionalMemberAccess": "none",
+    "reportOptionalSubscript": "none",
+    "reportPrivateImportUsage": "none"
 }

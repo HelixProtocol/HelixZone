@@ -1,0 +1,81 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "helixzone"
+version = "0.1.0"
+description = "Advanced Image Processing Application"
+authors = [{name = "HelixZone Team"}]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.20.0",
+    "opencv-python>=4.5.0",
+    "opencv-contrib-python>=4.5.0",
+    "PyQt6>=6.2.0",
+    "typing-extensions>=4.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pylint>=2.12.0",
+    "pytest>=6.0.0",
+    "mypy>=0.910",
+    "opencv-stubs",
+]
+gpu = [
+    "cupy>=10.0.0",
+    "pyopencl>=2022.0.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+strict_optional = true
+
+[[tool.mypy.overrides]]
+module = ["cv2.*", "cupy.*", "pyopencl.*"]
+ignore_missing_imports = true
+
+[tool.pylance]
+typeCheckingMode = "strict"
+reportMissingImports = true
+reportMissingTypeStubs = "warning"
+reportUnknownMemberType = "warning"
+reportAttributeAccessIssue = "warning"
+
+[tool.bandit]
+exclude_dirs = ["tests", "venv"]
+skips = ["B101"]  # Skip assert warnings
+
+[tool.pytest.ini_options]
+addopts = "--cov=src --cov-report=term-missing"
+testpaths = ["tests"]
+markers = [
+    "integration: marks tests that integrate multiple components",
+    "performance: marks tests that check performance characteristics",
+    "memory: marks tests that check memory usage"
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*", "**/__init__.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+] 

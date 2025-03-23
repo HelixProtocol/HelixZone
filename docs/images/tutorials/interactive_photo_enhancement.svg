@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1200" height="1000" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- Common Styles -->
+        <style type="text/css">
+            .step-title { font-family: Arial; font-size: 14px; font-weight: bold; }
+            .step-desc { font-family: Arial; font-size: 12px; }
+            .tool-name { font-family: 'Courier New'; font-size: 12px; fill: #1976d2; }
+            .hover-text { font-family: Arial; font-size: 12px; fill: #ffffff; }
+            
+            /* Interactive States */
+            .interactive-element:hover {
+                filter: brightness(1.1);
+                cursor: pointer;
+            }
+            .tooltip { opacity: 0; transition: opacity 0.3s; }
+            .interactive-element:hover .tooltip { opacity: 1; }
+            .preview-after { opacity: 0; transition: opacity 0.3s; }
+            .preview-area:hover .preview-after { opacity: 1; }
+        </style>
+
+        <!-- Step Container -->
+        <g id="step-container">
+            <rect width="360" height="280" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+            <rect width="360" height="40" rx="5" fill="#f5f5f5" stroke="#e0e0e0"/>
+        </g>
+
+        <!-- Preview Area -->
+        <g id="preview-area">
+            <rect width="320" height="180" rx="3" fill="#fafafa" stroke="#e0e0e0"/>
+        </g>
+
+        <!-- Tooltip -->
+        <g id="tooltip">
+            <rect width="200" height="100" rx="5" fill="#424242" opacity="0.9"/>
+        </g>
+    </defs>
+
+    <!-- Title -->
+    <text x="20" y="40" font-family="Arial" font-size="24" font-weight="bold">
+        Interactive Photo Enhancement Workflow
+    </text>
+    <text x="20" y="70" font-family="Arial" font-size="14">
+        Hover over steps to see before/after previews and tool tips
+    </text>
+
+    <!-- Basic Adjustments -->
+    <g transform="translate(20,100)">
+        <use href="#step-container"/>
+        <text x="20" y="25" class="step-title">1. Basic Adjustments</text>
+        
+        <!-- Preview Area -->
+        <g transform="translate(20,50)" class="preview-area interactive-element">
+            <use href="#preview-area"/>
+            <rect x="10" y="10" width="300" height="160" fill="#e0e0e0"/>
+            <text x="160" y="90" text-anchor="middle" class="step-desc">Before</text>
+            <rect x="10" y="10" width="300" height="160" fill="#f5f5f5" class="preview-after"/>
+            <text x="160" y="90" text-anchor="middle" class="step-desc preview-after">After</text>
+            
+            <!-- Tooltip -->
+            <g class="tooltip" transform="translate(330,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Basic Adjustments</text>
+                <text x="10" y="40" class="hover-text">• Exposure correction</text>
+                <text x="10" y="60" class="hover-text">• White balance</text>
+                <text x="10" y="80" class="hover-text">• Contrast/Brightness</text>
+            </g>
+        </g>
+        
+        <!-- Tools -->
+        <g transform="translate(20,240)">
+            <text x="0" y="0" class="tool-name">Levels (Ctrl+L)</text>
+            <text x="0" y="20" class="tool-name">Curves (Ctrl+M)</text>
+        </g>
+    </g>
+
+    <!-- Color Enhancement -->
+    <g transform="translate(400,100)">
+        <use href="#step-container"/>
+        <text x="20" y="25" class="step-title">2. Color Enhancement</text>
+        
+        <!-- Preview Area -->
+        <g transform="translate(20,50)" class="preview-area interactive-element">
+            <use href="#preview-area"/>
+            <rect x="10" y="10" width="300" height="160" fill="#e0e0e0"/>
+            <text x="160" y="90" text-anchor="middle" class="step-desc">Before</text>
+            <rect x="10" y="10" width="300" height="160" fill="#f8bbd0" class="preview-after"/>
+            <text x="160" y="90" text-anchor="middle" class="step-desc preview-after">After</text>
+            
+            <!-- Tooltip -->
+            <g class="tooltip" transform="translate(330,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Color Enhancement</text>
+                <text x="10" y="40" class="hover-text">• Vibrance/Saturation</text>
+                <text x="10" y="60" class="hover-text">• Color balance</text>
+                <text x="10" y="80" class="hover-text">• Selective color</text>
+            </g>
+        </g>
+        
+        <!-- Tools -->
+        <g transform="translate(20,240)">
+            <text x="0" y="0" class="tool-name">Hue/Sat (Ctrl+U)</text>
+            <text x="0" y="20" class="tool-name">Color Balance</text>
+        </g>
+    </g>
+
+    <!-- Detail Enhancement -->
+    <g transform="translate(780,100)">
+        <use href="#step-container"/>
+        <text x="20" y="25" class="step-title">3. Detail Enhancement</text>
+        
+        <!-- Preview Area -->
+        <g transform="translate(20,50)" class="preview-area interactive-element">
+            <use href="#preview-area"/>
+            <rect x="10" y="10" width="300" height="160" fill="#e0e0e0"/>
+            <text x="160" y="90" text-anchor="middle" class="step-desc">Before</text>
+            <rect x="10" y="10" width="300" height="160" fill="#c5cae9" class="preview-after"/>
+            <text x="160" y="90" text-anchor="middle" class="step-desc preview-after">After</text>
+            
+            <!-- Tooltip -->
+            <g class="tooltip" transform="translate(330,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Detail Enhancement</text>
+                <text x="10" y="40" class="hover-text">• Sharpening</text>
+                <text x="10" y="60" class="hover-text">• Noise reduction</text>
+                <text x="10" y="80" class="hover-text">• Clarity</text>
+            </g>
+        </g>
+        
+        <!-- Tools -->
+        <g transform="translate(20,240)">
+            <text x="0" y="0" class="tool-name">Smart Sharpen</text>
+            <text x="0" y="20" class="tool-name">Reduce Noise</text>
+        </g>
+    </g>
+
+    <!-- Local Adjustments -->
+    <g transform="translate(20,400)">
+        <use href="#step-container"/>
+        <text x="20" y="25" class="step-title">4. Local Adjustments</text>
+        
+        <!-- Preview Area -->
+        <g transform="translate(20,50)" class="preview-area interactive-element">
+            <use href="#preview-area"/>
+            <rect x="10" y="10" width="300" height="160" fill="#e0e0e0"/>
+            <text x="160" y="90" text-anchor="middle" class="step-desc">Before</text>
+            <rect x="10" y="10" width="300" height="160" fill="#b2dfdb" class="preview-after"/>
+            <text x="160" y="90" text-anchor="middle" class="step-desc preview-after">After</text>
+            
+            <!-- Tooltip -->
+            <g class="tooltip" transform="translate(330,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Local Adjustments</text>
+                <text x="10" y="40" class="hover-text">• Dodge and burn</text>
+                <text x="10" y="60" class="hover-text">• Local contrast</text>
+                <text x="10" y="80" class="hover-text">• Selective sharpening</text>
+            </g>
+        </g>
+        
+        <!-- Tools -->
+        <g transform="translate(20,240)">
+            <text x="0" y="0" class="tool-name">Brush (B)</text>
+            <text x="0" y="20" class="tool-name">Gradient (G)</text>
+        </g>
+    </g>
+
+    <!-- Final Touches -->
+    <g transform="translate(400,400)">
+        <use href="#step-container"/>
+        <text x="20" y="25" class="step-title">5. Final Touches</text>
+        
+        <!-- Preview Area -->
+        <g transform="translate(20,50)" class="preview-area interactive-element">
+            <use href="#preview-area"/>
+            <rect x="10" y="10" width="300" height="160" fill="#e0e0e0"/>
+            <text x="160" y="90" text-anchor="middle" class="step-desc">Before</text>
+            <rect x="10" y="10" width="300" height="160" fill="#ffccbc" class="preview-after"/>
+            <text x="160" y="90" text-anchor="middle" class="step-desc preview-after">After</text>
+            
+            <!-- Tooltip -->
+            <g class="tooltip" transform="translate(330,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Final Touches</text>
+                <text x="10" y="40" class="hover-text">• Vignette</text>
+                <text x="10" y="60" class="hover-text">• Color grading</text>
+                <text x="10" y="80" class="hover-text">• Export settings</text>
+            </g>
+        </g>
+        
+        <!-- Tools -->
+        <g transform="translate(20,240)">
+            <text x="0" y="0" class="tool-name">Effects Panel</text>
+            <text x="0" y="20" class="tool-name">Export (Ctrl+E)</text>
+        </g>
+    </g>
+
+    <!-- Best Practices -->
+    <g transform="translate(20,700)">
+        <rect width="1160" height="120" rx="5" fill="#e8f5e9" stroke="#a5d6a7"/>
+        <text x="20" y="30" class="step-title">Best Practices</text>
+        
+        <g transform="translate(20,50)">
+            <text x="0" y="0" class="step-desc">• Work on duplicate layers</text>
+            <text x="0" y="20" class="step-desc">• Use adjustment layers</text>
+            <text x="0" y="40" class="step-desc">• Save versions regularly</text>
+            
+            <text x="300" y="0" class="step-desc">• Start with global adjustments</text>
+            <text x="300" y="20" class="step-desc">• Work non-destructively</text>
+            <text x="300" y="40" class="step-desc">• Use layer masks for control</text>
+            
+            <text x="600" y="0" class="step-desc">• Check at multiple zoom levels</text>
+            <text x="600" y="20" class="step-desc">• Preview on different displays</text>
+            <text x="600" y="40" class="step-desc">• Consider output medium</text>
+        </g>
+    </g>
+
+    <!-- Quick Tips -->
+    <g transform="translate(20,840)">
+        <rect width="1160" height="120" rx="5" fill="#fff3e0" stroke="#ffe0b2"/>
+        <text x="20" y="30" class="step-title">Quick Tips</text>
+        
+        <g transform="translate(20,50)">
+            <text x="0" y="0" class="step-desc">• Press / to toggle layer visibility</text>
+            <text x="0" y="20" class="step-desc">• Alt+Click layer mask to view/edit</text>
+            <text x="0" y="40" class="step-desc">• Use numbers for opacity</text>
+            
+            <text x="300" y="0" class="step-desc">• F cycles screen modes</text>
+            <text x="300" y="20" class="step-desc">• Space for Hand tool</text>
+            <text x="300" y="40" class="step-desc">• Z for Zoom tool</text>
+            
+            <text x="600" y="0" class="step-desc">• Ctrl+S saves frequently</text>
+            <text x="600" y="20" class="step-desc">• Ctrl+Alt+S for Save As</text>
+            <text x="600" y="40" class="step-desc">• Ctrl+Z for undo</text>
+        </g>
+    </g>
+</svg> 

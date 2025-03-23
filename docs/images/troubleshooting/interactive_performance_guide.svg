@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1200" height="1400" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- Common Styles -->
+        <style type="text/css">
+            .metric-title { font-family: Arial; font-size: 16px; font-weight: bold; }
+            .metric-desc { font-family: Arial; font-size: 12px; }
+            .setting-name { font-family: 'Courier New'; font-size: 12px; fill: #1976d2; }
+            .hover-text { font-family: Arial; font-size: 12px; fill: #ffffff; }
+            
+            /* Interactive States */
+            .interactive-element:hover {
+                filter: brightness(1.1);
+                cursor: pointer;
+            }
+            .tooltip { opacity: 0; transition: opacity 0.3s; }
+            .interactive-element:hover .tooltip { opacity: 1; }
+            .metric-detail { opacity: 0; transition: opacity 0.3s; }
+            .metric-box:hover .metric-detail { opacity: 1; }
+            
+            /* Graph Animations */
+            .graph-line {
+                stroke-dasharray: 1000;
+                stroke-dashoffset: 1000;
+                animation: dash 2s linear forwards;
+            }
+            @keyframes dash {
+                to { stroke-dashoffset: 0; }
+            }
+            
+            /* New Styles */
+            .profile-button:hover { filter: brightness(1.2); }
+            .metric-bar { transition: width 0.3s ease-in-out; }
+            .operation-metric:hover .detail-view { display: block; }
+            .detail-view { display: none; }
+        </style>
+
+        <!-- Metric Container -->
+        <g id="metric-container">
+            <rect width="360" height="280" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+            <rect width="360" height="40" rx="5" fill="#f5f5f5" stroke="#e0e0e0"/>
+        </g>
+
+        <!-- Graph Container -->
+        <g id="graph-container">
+            <rect width="320" height="180" rx="3" fill="#fafafa" stroke="#e0e0e0"/>
+            <!-- Grid Lines -->
+            <line x1="40" y1="20" x2="40" y2="160" stroke="#e0e0e0" stroke-width="1"/>
+            <line x1="40" y1="160" x2="300" y2="160" stroke="#e0e0e0" stroke-width="1"/>
+        </g>
+
+        <!-- Tooltip -->
+        <g id="tooltip">
+            <rect width="200" height="120" rx="5" fill="#424242" opacity="0.9"/>
+        </g>
+
+        <!-- Toggle Switch -->
+        <g id="toggle-switch">
+            <rect width="40" height="20" rx="10" fill="#e0e0e0"/>
+            <circle r="8" fill="#ffffff" stroke="#1976d2"/>
+        </g>
+
+        <!-- Additional containers -->
+        <g id="operation-metric-box">
+            <rect width="260" height="80" rx="3" fill="#f5f5f5" stroke="#e0e0e0"/>
+        </g>
+
+        <g id="progress-bar">
+            <rect width="200" height="10" rx="5" fill="#e0e0e0"/>
+        </g>
+
+        <g id="workflow-profile">
+            <rect width="270" height="140" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+            <rect width="270" height="30" rx="5" fill="#f5f5f5" stroke="#e0e0e0"/>
+        </g>
+    </defs>
+
+    <!-- Title -->
+    <text x="20" y="40" font-family="Arial" font-size="24" font-weight="bold">
+        Interactive Performance Optimization Guide
+    </text>
+    <text x="20" y="70" font-family="Arial" font-size="14">
+        Monitor real-time metrics and optimize application performance
+    </text>
+
+    <!-- CPU Usage -->
+    <g transform="translate(20,100)">
+        <use href="#metric-container"/>
+        <text x="20" y="25" class="metric-title">CPU Usage</text>
+        
+        <!-- Metric Area -->
+        <g transform="translate(20,50)" class="metric-box interactive-element">
+            <use href="#graph-container"/>
+            <!-- CPU Usage Graph -->
+            <path d="M40,160 L80,120 L120,140 L160,80 L200,100 L240,60 L280,90" 
+                  fill="none" stroke="#2196F3" stroke-width="2" class="graph-line"/>
+            
+            <!-- Optimization Controls -->
+            <g transform="translate(20,190)">
+                <text x="0" y="0" class="setting-name">Thread Priority:</text>
+                <use href="#toggle-switch" transform="translate(120,-15)"/>
+                <text x="0" y="25" class="setting-name">Process Affinity:</text>
+                <use href="#toggle-switch" transform="translate(120,10)"/>
+            </g>
+            
+            <!-- Tooltip -->
+            <g class="tooltip" transform="translate(330,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">CPU Optimization</text>
+                <text x="10" y="40" class="hover-text">• Current: 45%</text>
+                <text x="10" y="60" class="hover-text">• Threads: 8/16</text>
+                <text x="10" y="80" class="hover-text">• Priority: Normal</text>
+                <text x="10" y="100" class="hover-text">Click to adjust</text>
+            </g>
+        </g>
+    </g>
+
+    <!-- Memory Usage -->
+    <g transform="translate(400,100)">
+        <use href="#metric-container"/>
+        <text x="20" y="25" class="metric-title">Memory Usage</text>
+        
+        <!-- Metric Area -->
+        <g transform="translate(20,50)" class="metric-box interactive-element">
+            <use href="#graph-container"/>
+            <!-- Memory Usage Graph -->
+            <path d="M40,160 L80,140 L120,130 L160,120 L200,100 L240,90 L280,70" 
+                  fill="none" stroke="#4CAF50" stroke-width="2" class="graph-line"/>
+            
+            <!-- Optimization Controls -->
+            <g transform="translate(20,190)">
+                <text x="0" y="0" class="setting-name">Cache Size:</text>
+                <use href="#toggle-switch" transform="translate(120,-15)"/>
+                <text x="0" y="25" class="setting-name">Memory Limit:</text>
+                <use href="#toggle-switch" transform="translate(120,10)"/>
+            </g>
+            
+            <!-- Tooltip -->
+            <g class="tooltip" transform="translate(330,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Memory Optimization</text>
+                <text x="10" y="40" class="hover-text">• Used: 4.2GB</text>
+                <text x="10" y="60" class="hover-text">• Available: 8GB</text>
+                <text x="10" y="80" class="hover-text">• Cache: 512MB</text>
+                <text x="10" y="100" class="hover-text">Click to adjust</text>
+            </g>
+        </g>
+    </g>
+
+    <!-- GPU Performance -->
+    <g transform="translate(780,100)">
+        <use href="#metric-container"/>
+        <text x="20" y="25" class="metric-title">Enhanced GPU Metrics</text>
+        
+        <!-- Metric Area -->
+        <g transform="translate(20,50)" class="metric-box interactive-element">
+            <use href="#graph-container"/>
+            
+            <!-- Split GPU Usage Graph -->
+            <path d="M40,160 L80,100 L120,120 L160,40 L200,60 L240,30 L280,50" 
+                  fill="none" stroke="#FF9800" stroke-width="2" class="graph-line"/>
+            <path d="M40,140 L80,120 L120,130 L160,80 L200,90 L240,70 L280,85" 
+                  fill="none" stroke="#E65100" stroke-width="2" class="graph-line"/>
+            
+            <!-- Enhanced Controls -->
+            <g transform="translate(20,190)">
+                <text x="0" y="0" class="setting-name">Compute Priority:</text>
+                <use href="#toggle-switch" transform="translate(120,-15)"/>
+                <text x="0" y="25" class="setting-name">Memory Balance:</text>
+                <use href="#toggle-switch" transform="translate(120,10)"/>
+            </g>
+            
+            <!-- Enhanced Tooltip -->
+            <g class="tooltip" transform="translate(330,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Detailed GPU Metrics</text>
+                <text x="10" y="40" class="hover-text">• Compute: 65% (↑5%)</text>
+                <text x="10" y="60" class="hover-text">• Memory: 45% (↓2%)</text>
+                <text x="10" y="80" class="hover-text">• Bandwidth: 8.2GB/s</text>
+                <text x="10" y="100" class="hover-text">• Queue Depth: 3</text>
+            </g>
+        </g>
+    </g>
+
+    <!-- I/O Performance -->
+    <g transform="translate(20,400)">
+        <use href="#metric-container"/>
+        <text x="20" y="25" class="metric-title">I/O Performance</text>
+        
+        <!-- Metric Area -->
+        <g transform="translate(20,50)" class="metric-box interactive-element">
+            <use href="#graph-container"/>
+            <!-- I/O Performance Graph -->
+            <path d="M40,160 L80,150 L120,140 L160,145 L200,130 L240,125 L280,120" 
+                  fill="none" stroke="#9C27B0" stroke-width="2" class="graph-line"/>
+            
+            <!-- Bottleneck Indicators -->
+            <circle cx="160" cy="145" r="4" fill="#E91E63" class="bottleneck-point"/>
+            <circle cx="240" cy="125" r="4" fill="#E91E63" class="bottleneck-point"/>
+            
+            <!-- Enhanced I/O Controls -->
+            <g transform="translate(20,190)">
+                <text x="0" y="0" class="setting-name">Read Ahead:</text>
+                <use href="#toggle-switch" transform="translate(120,-15)"/>
+                <text x="0" y="25" class="setting-name">Write Cache:</text>
+                <use href="#toggle-switch" transform="translate(120,10)"/>
+            </g>
+            
+            <!-- Enhanced I/O Tooltip -->
+            <g class="tooltip" transform="translate(330,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">I/O Analysis</text>
+                <text x="10" y="40" class="hover-text">• Read: 150MB/s (↑20MB/s)</text>
+                <text x="10" y="60" class="hover-text">• Write: 80MB/s (↑5MB/s)</text>
+                <text x="10" y="80" class="hover-text">• Bottlenecks: 2</text>
+                <text x="10" y="100" class="hover-text">• Queue Depth: 4</text>
+            </g>
+        </g>
+    </g>
+
+    <!-- Operation-Specific Metrics -->
+    <g transform="translate(400,400)">
+        <use href="#metric-container"/>
+        <text x="20" y="25" class="metric-title">Operation Latency</text>
+        
+        <!-- Filter Operations with Breakdown -->
+        <g transform="translate(20,50)" class="operation-metric interactive-element">
+            <use href="#operation-metric-box"/>
+            <text x="10" y="20" class="metric-desc">Filter Processing</text>
+            <g transform="translate(10,30)">
+                <use href="#progress-bar"/>
+                <rect width="160" height="10" rx="5" fill="#2196F3" class="metric-bar"/>
+                <text x="210" y="9" class="metric-desc">80% (45ms)</text>
+            </g>
+            
+            <!-- Detailed Latency View -->
+            <g class="detail-view" transform="translate(270,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Latency Breakdown</text>
+                <text x="10" y="40" class="hover-text">• GPU Transfer: 12ms</text>
+                <text x="10" y="60" class="hover-text">• Compute: 28ms</text>
+                <text x="10" y="80" class="hover-text">• Memory Copy: 5ms</text>
+                <text x="10" y="100" class="hover-text">Total: 45ms (↓8ms)</text>
+            </g>
+        </g>
+
+        <!-- Layer Operations -->
+        <g transform="translate(20,140)" class="operation-metric interactive-element">
+            <use href="#operation-metric-box"/>
+            <text x="10" y="20" class="metric-desc">Layer Operations</text>
+            <g transform="translate(10,30)">
+                <use href="#progress-bar"/>
+                <rect width="140" height="10" rx="5" fill="#4CAF50" class="metric-bar"/>
+                <text x="210" y="9" class="metric-desc">70%</text>
+            </g>
+            
+            <!-- Detailed View -->
+            <g class="detail-view" transform="translate(270,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Layer Performance</text>
+                <text x="10" y="40" class="hover-text">• Memory Usage: 2.1GB</text>
+                <text x="10" y="60" class="hover-text">• Blend Time: 28ms</text>
+                <text x="10" y="80" class="hover-text">• Active Layers: 12</text>
+            </g>
+        </g>
+
+        <!-- Selection Operations -->
+        <g transform="translate(20,230)" class="operation-metric interactive-element">
+            <use href="#operation-metric-box"/>
+            <text x="10" y="20" class="metric-desc">Selection Tools</text>
+            <g transform="translate(10,30)">
+                <use href="#progress-bar"/>
+                <rect width="180" height="10" rx="5" fill="#FF9800" class="metric-bar"/>
+                <text x="210" y="9" class="metric-desc">90%</text>
+            </g>
+            
+            <!-- Detailed View -->
+            <g class="detail-view" transform="translate(270,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Selection Performance</text>
+                <text x="10" y="40" class="hover-text">• Response Time: 12ms</text>
+                <text x="10" y="60" class="hover-text">• Edge Detection: 8ms</text>
+                <text x="10" y="80" class="hover-text">• Path Updates: 5ms</text>
+            </g>
+        </g>
+    </g>
+
+    <!-- Workflow-Specific Profiles -->
+    <g transform="translate(20,700)">
+        <text x="20" y="30" class="metric-title">Workflow Optimization Profiles</text>
+        
+        <!-- Profile Comparison Button -->
+        <g transform="translate(900,20)" class="interactive-element">
+            <rect width="120" height="30" rx="5" fill="#1976d2"/>
+            <text x="60" y="20" text-anchor="middle" fill="white" class="metric-desc">Compare Profiles</text>
+        </g>
+
+        <!-- Enhanced Photo Editing Profile -->
+        <g transform="translate(20,50)" class="interactive-element">
+            <use href="#workflow-profile"/>
+            <text x="20" y="20" class="metric-title">Photo Editing</text>
+            <g transform="translate(20,40)">
+                <text x="0" y="20" class="metric-desc">• High GPU Priority</text>
+                <text x="0" y="40" class="metric-desc">• Large Cache Size</text>
+                <text x="0" y="60" class="metric-desc">• Filter Optimization</text>
+                <text x="0" y="80" class="metric-desc">• 4K Resolution Support</text>
+            </g>
+            <rect width="80" height="25" rx="3" fill="#2196F3" x="180" y="105"/>
+            <text x="220" y="122" text-anchor="middle" fill="white" class="metric-desc">Apply</text>
+            
+            <!-- Enhanced Settings Tooltip -->
+            <g class="tooltip" transform="translate(280,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Enhanced Settings</text>
+                <text x="10" y="40" class="hover-text">• GPU Priority: High</text>
+                <text x="10" y="60" class="hover-text">• Cache: 4GB</text>
+                <text x="10" y="80" class="hover-text">• Thread Count: Auto</text>
+                <text x="10" y="100" class="hover-text">• Preview Quality: High</text>
+            </g>
+        </g>
+
+        <!-- Batch Processing Profile -->
+        <g transform="translate(310,50)" class="interactive-element">
+            <use href="#workflow-profile"/>
+            <text x="20" y="20" class="metric-title">Batch Processing</text>
+            <g transform="translate(20,40)">
+                <text x="0" y="20" class="metric-desc">• Multi-threading</text>
+                <text x="0" y="40" class="metric-desc">• I/O Optimization</text>
+                <text x="0" y="60" class="metric-desc">• Memory Management</text>
+                <text x="0" y="80" class="metric-desc">• Background Priority</text>
+            </g>
+            <rect width="80" height="25" rx="3" fill="#4CAF50" x="180" y="105"/>
+            <text x="220" y="122" text-anchor="middle" fill="white" class="metric-desc">Apply</text>
+        </g>
+
+        <!-- Real-time Editing Profile -->
+        <g transform="translate(600,50)" class="interactive-element">
+            <use href="#workflow-profile"/>
+            <text x="20" y="20" class="metric-title">Real-time Editing</text>
+            <g transform="translate(20,40)">
+                <text x="0" y="20" class="metric-desc">• Low Latency Mode</text>
+                <text x="0" y="40" class="metric-desc">• Preview Optimization</text>
+                <text x="0" y="60" class="metric-desc">• Dynamic Resolution</text>
+                <text x="0" y="80" class="metric-desc">• Quick Cache</text>
+            </g>
+            <rect width="80" height="25" rx="3" fill="#FF9800" x="180" y="105"/>
+            <text x="220" y="122" text-anchor="middle" fill="white" class="metric-desc">Apply</text>
+        </g>
+
+        <!-- Animation Profile -->
+        <g transform="translate(890,50)" class="interactive-element">
+            <use href="#workflow-profile"/>
+            <text x="20" y="20" class="metric-title">Animation</text>
+            <g transform="translate(20,40)">
+                <text x="0" y="20" class="metric-desc">• Frame Buffering</text>
+                <text x="0" y="40" class="metric-desc">• Timeline Cache</text>
+                <text x="0" y="60" class="metric-desc">• Memory Pre-allocation</text>
+                <text x="0" y="80" class="metric-desc">• GPU Sync</text>
+            </g>
+            <rect width="80" height="25" rx="3" fill="#9C27B0" x="180" y="105"/>
+            <text x="220" y="122" text-anchor="middle" fill="white" class="metric-desc">Apply</text>
+        </g>
+
+        <!-- High-Resolution Compositing Profile -->
+        <g transform="translate(20,220)" class="interactive-element">
+            <use href="#workflow-profile"/>
+            <text x="20" y="20" class="metric-title">High-Res Compositing</text>
+            <g transform="translate(20,40)">
+                <text x="0" y="20" class="metric-desc">• Smart Layer Caching</text>
+                <text x="0" y="40" class="metric-desc">• Memory Optimization</text>
+                <text x="0" y="60" class="metric-desc">• Tile-based Processing</text>
+                <text x="0" y="80" class="metric-desc">• 8K+ Resolution Support</text>
+            </g>
+            <rect width="80" height="25" rx="3" fill="#673AB7" x="180" y="105"/>
+            <text x="220" y="122" text-anchor="middle" fill="white" class="metric-desc">Apply</text>
+            
+            <!-- Enhanced Tooltip -->
+            <g class="tooltip" transform="translate(280,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Compositing Settings</text>
+                <text x="10" y="40" class="hover-text">• Cache: 8GB/layer</text>
+                <text x="10" y="60" class="hover-text">• Tile Size: 2048px</text>
+                <text x="10" y="80" class="hover-text">• GPU Memory: 6GB+</text>
+                <text x="10" y="100" class="hover-text">• Swap: Enabled</text>
+            </g>
+        </g>
+
+        <!-- Video Frame Editing Profile -->
+        <g transform="translate(310,220)" class="interactive-element">
+            <use href="#workflow-profile"/>
+            <text x="20" y="20" class="metric-title">Video Frame Editing</text>
+            <g transform="translate(20,40)">
+                <text x="0" y="20" class="metric-desc">• Frame Sequence Cache</text>
+                <text x="0" y="40" class="metric-desc">• I/O Optimization</text>
+                <text x="0" y="60" class="metric-desc">• Memory Pre-allocation</text>
+                <text x="0" y="80" class="metric-desc">• Timeline Buffering</text>
+            </g>
+            <rect width="80" height="25" rx="3" fill="#00BCD4" x="180" y="105"/>
+            <text x="220" y="122" text-anchor="middle" fill="white" class="metric-desc">Apply</text>
+            
+            <!-- Enhanced Tooltip -->
+            <g class="tooltip" transform="translate(280,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Frame Settings</text>
+                <text x="10" y="40" class="hover-text">• Buffer: 120 frames</text>
+                <text x="10" y="60" class="hover-text">• Read-ahead: 30 frames</text>
+                <text x="10" y="80" class="hover-text">• Cache: 4GB reserved</text>
+                <text x="10" y="100" class="hover-text">• Codec: Hardware</text>
+            </g>
+        </g>
+
+        <!-- AI-Enhanced Editing Profile -->
+        <g transform="translate(600,220)" class="interactive-element">
+            <use href="#workflow-profile"/>
+            <text x="20" y="20" class="metric-title">AI-Enhanced Editing</text>
+            <g transform="translate(20,40)">
+                <text x="0" y="20" class="metric-desc">• Model Optimization</text>
+                <text x="0" y="40" class="metric-desc">• Inference Pipeline</text>
+                <text x="0" y="60" class="metric-desc">• Batch Processing</text>
+                <text x="0" y="80" class="metric-desc">• GPU Memory Management</text>
+            </g>
+            <rect width="80" height="25" rx="3" fill="#F44336" x="180" y="105"/>
+            <text x="220" y="122" text-anchor="middle" fill="white" class="metric-desc">Apply</text>
+            
+            <!-- Enhanced Tooltip -->
+            <g class="tooltip" transform="translate(280,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">AI Settings</text>
+                <text x="10" y="40" class="hover-text">• Model Cache: 2GB</text>
+                <text x="10" y="60" class="hover-text">• Batch Size: 4</text>
+                <text x="10" y="80" class="hover-text">• FP16: Enabled</text>
+                <text x="10" y="100" class="hover-text">• TensorRT: On</text>
+            </g>
+        </g>
+
+        <!-- HDR Processing Profile -->
+        <g transform="translate(890,220)" class="interactive-element">
+            <use href="#workflow-profile"/>
+            <text x="20" y="20" class="metric-title">HDR Processing</text>
+            <g transform="translate(20,40)">
+                <text x="0" y="20" class="metric-desc">• 32-bit Color Depth</text>
+                <text x="0" y="40" class="metric-desc">• Exposure Stacking</text>
+                <text x="0" y="60" class="metric-desc">• Tone Mapping</text>
+                <text x="0" y="80" class="metric-desc">• Color Management</text>
+            </g>
+            <rect width="80" height="25" rx="3" fill="#795548" x="180" y="105"/>
+            <text x="220" y="122" text-anchor="middle" fill="white" class="metric-desc">Apply</text>
+            
+            <!-- HDR Settings Tooltip -->
+            <g class="tooltip" transform="translate(280,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">HDR Settings</text>
+                <text x="10" y="40" class="hover-text">• Color Space: ACEScg</text>
+                <text x="10" y="60" class="hover-text">• LUT Size: 32³</text>
+                <text x="10" y="80" class="hover-text">• Cache: 6GB</text>
+                <text x="10" y="100" class="hover-text">• GPU: Required</text>
+            </g>
+        </g>
+
+        <!-- Panorama Stitching Profile -->
+        <g transform="translate(20,390)" class="interactive-element">
+            <use href="#workflow-profile"/>
+            <text x="20" y="20" class="metric-title">Panorama Stitching</text>
+            <g transform="translate(20,40)">
+                <text x="0" y="20" class="metric-desc">• Feature Detection</text>
+                <text x="0" y="40" class="metric-desc">• Image Alignment</text>
+                <text x="0" y="60" class="metric-desc">• Blending Pipeline</text>
+                <text x="0" y="80" class="metric-desc">• Memory Management</text>
+            </g>
+            <rect width="80" height="25" rx="3" fill="#009688" x="180" y="105"/>
+            <text x="220" y="122" text-anchor="middle" fill="white" class="metric-desc">Apply</text>
+            
+            <!-- Panorama Settings Tooltip -->
+            <g class="tooltip" transform="translate(280,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Panorama Settings</text>
+                <text x="10" y="40" class="hover-text">• SIFT Points: 8000</text>
+                <text x="10" y="60" class="hover-text">• Blend Mode: Multi</text>
+                <text x="10" y="80" class="hover-text">• Cache: 8GB</text>
+                <text x="10" y="100" class="hover-text">• CPU Threads: Max</text>
+            </g>
+        </g>
+
+        <!-- Focus Stacking Profile -->
+        <g transform="translate(310,390)" class="interactive-element">
+            <use href="#workflow-profile"/>
+            <text x="20" y="20" class="metric-title">Focus Stacking</text>
+            <g transform="translate(20,40)">
+                <text x="0" y="20" class="metric-desc">• Edge Detection</text>
+                <text x="0" y="40" class="metric-desc">• Depth Mapping</text>
+                <text x="0" y="60" class="metric-desc">• Smart Blending</text>
+                <text x="0" y="80" class="metric-desc">• Artifact Removal</text>
+            </g>
+            <rect width="80" height="25" rx="3" fill="#607D8B" x="180" y="105"/>
+            <text x="220" y="122" text-anchor="middle" fill="white" class="metric-desc">Apply</text>
+            
+            <!-- Focus Stack Settings Tooltip -->
+            <g class="tooltip" transform="translate(280,0)">
+                <use href="#tooltip"/>
+                <text x="10" y="20" class="hover-text">Stack Settings</text>
+                <text x="10" y="40" class="hover-text">• Radius: 8px</text>
+                <text x="10" y="60" class="hover-text">• Smoothing: 3</text>
+                <text x="10" y="80" class="hover-text">• Preview: Real-time</text>
+                <text x="10" y="100" class="hover-text">• GPU: Preferred</text>
+            </g>
+        </g>
+
+        <!-- Profile Comparison Panel -->
+        <g transform="translate(600,390)" class="comparison-panel">
+            <rect width="540" height="200" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+            <text x="20" y="30" class="metric-title">Profile Comparison</text>
+            
+            <!-- Comparison Headers -->
+            <g transform="translate(20,50)">
+                <text x="0" y="0" class="metric-desc" style="font-weight: bold">Feature</text>
+                <text x="120" y="0" class="metric-desc" style="font-weight: bold">Current</text>
+                <text x="240" y="0" class="metric-desc" style="font-weight: bold">Selected</text>
+                <text x="360" y="0" class="metric-desc" style="font-weight: bold">Difference</text>
+            </g>
+
+            <!-- Comparison Rows -->
+            <g transform="translate(20,80)">
+                <text x="0" y="0" class="metric-desc">GPU Usage</text>
+                <text x="120" y="0" class="metric-desc">65%</text>
+                <text x="240" y="0" class="metric-desc">85%</text>
+                <text x="360" y="0" class="metric-desc" fill="#f44336">+20%</text>
+
+                <text x="0" y="25" class="metric-desc">Memory</text>
+                <text x="120" y="25" class="metric-desc">4.2GB</text>
+                <text x="240" y="25" class="metric-desc">6.8GB</text>
+                <text x="360" y="25" class="metric-desc" fill="#f44336">+2.6GB</text>
+
+                <text x="0" y="50" class="metric-desc">Cache Size</text>
+                <text x="120" y="50" class="metric-desc">2GB</text>
+                <text x="240" y="50" class="metric-desc">4GB</text>
+                <text x="360" y="50" class="metric-desc" fill="#f44336">+2GB</text>
+
+                <text x="0" y="75" class="metric-desc">Latency</text>
+                <text x="120" y="75" class="metric-desc">45ms</text>
+                <text x="240" y="75" class="metric-desc">35ms</text>
+                <text x="360" y="75" class="metric-desc" fill="#4caf50">-10ms</text>
+            </g>
+
+            <!-- Apply Button -->
+            <g transform="translate(430,150)" class="interactive-element">
+                <rect width="90" height="30" rx="5" fill="#4caf50"/>
+                <text x="45" y="20" text-anchor="middle" fill="white" class="metric-desc">Switch Profile</text>
+            </g>
+        </g>
+    </g>
+
+    <!-- Performance Analysis -->
+    <g transform="translate(20,900)">
+        <rect width="1160" height="200" rx="5" fill="#f5f5f5" stroke="#e0e0e0"/>
+        <text x="20" y="30" class="metric-title">Real-time Performance Analysis</text>
+        
+        <!-- Timeline Graph -->
+        <g transform="translate(20,50)">
+            <rect width="1120" height="120" rx="3" fill="#ffffff" stroke="#e0e0e0"/>
+            <path d="M40,100 C60,80 80,90 100,70 S120,60 140,50 S160,40 180,60 S200,80 220,70" 
+                  fill="none" stroke="#2196F3" stroke-width="2" class="graph-line"/>
+            <path d="M40,110 C60,100 80,95 100,90 S120,85 140,80 S160,75 180,85 S200,90 220,85" 
+                  fill="none" stroke="#4CAF50" stroke-width="2" class="graph-line"/>
+            
+            <!-- Timeline Labels -->
+            <text x="40" y="140" class="metric-desc">CPU Load</text>
+            <text x="120" y="140" class="metric-desc">Memory Usage</text>
+            <text x="200" y="140" class="metric-desc">GPU Utilization</text>
+        </g>
+    </g>
+
+    <!-- Enhanced Quick Tips -->
+    <g transform="translate(20,1120)">
+        <rect width="1160" height="240" rx="5" fill="#fff3e0" stroke="#ffe0b2"/>
+        <text x="20" y="30" class="metric-title">Advanced Optimization Tips</text>
+        
+        <!-- Tips Columns -->
+        <g transform="translate(20,50)">
+            <!-- Resource Management -->
+            <g>
+                <text x="0" y="0" class="metric-desc" style="font-weight: bold;">Resource Management</text>
+                <text x="0" y="25" class="metric-desc">• Monitor thread allocation</text>
+                <text x="0" y="45" class="metric-desc">• Implement smart caching</text>
+                <text x="0" y="65" class="metric-desc">• Use dynamic memory allocation</text>
+                <text x="0" y="85" class="metric-desc">• Enable resource pooling</text>
+            </g>
+            
+            <!-- Workflow Optimization -->
+            <g transform="translate(300,0)">
+                <text x="0" y="0" class="metric-desc" style="font-weight: bold;">Workflow Optimization</text>
+                <text x="0" y="25" class="metric-desc">• Batch similar operations</text>
+                <text x="0" y="45" class="metric-desc">• Use appropriate color depth</text>
+                <text x="0" y="65" class="metric-desc">• Optimize layer structure</text>
+                <text x="0" y="85" class="metric-desc">• Enable preview optimization</text>
+            </g>
+            
+            <!-- Hardware Utilization -->
+            <g transform="translate(600,0)">
+                <text x="0" y="0" class="metric-desc" style="font-weight: bold;">Hardware Utilization</text>
+                <text x="0" y="25" class="metric-desc">• Configure GPU preferences</text>
+                <text x="0" y="45" class="metric-desc">• Optimize disk I/O patterns</text>
+                <text x="0" y="65" class="metric-desc">• Balance CPU/GPU workload</text>
+                <text x="0" y="85" class="metric-desc">• Monitor thermal conditions</text>
+            </g>
+            
+            <!-- Performance Monitoring -->
+            <g transform="translate(900,0)">
+                <text x="0" y="0" class="metric-desc" style="font-weight: bold;">Performance Monitoring</text>
+                <text x="0" y="25" class="metric-desc">• Track operation timings</text>
+                <text x="0" y="45" class="metric-desc">• Analyze resource bottlenecks</text>
+                <text x="0" y="65" class="metric-desc">• Monitor memory leaks</text>
+                <text x="0" y="85" class="metric-desc">• Log performance metrics</text>
+            </g>
+        </g>
+    </g>
+
+    <!-- Profile Combination Studio -->
+    <g transform="translate(20,1380)">
+        <rect width="1160" height="400" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+        <text x="20" y="30" class="metric-title">Enhanced Profile Combination Studio</text>
+        
+        <!-- Common Combinations -->
+        <g transform="translate(20,50)">
+            <rect width="360" height="330" rx="5" fill="#f5f5f5" stroke="#e0e0e0"/>
+            <text x="20" y="30" class="metric-desc" style="font-weight: bold">Optimized Combinations</text>
+            
+            <!-- Combination List -->
+            <g transform="translate(20,50)">
+                <g class="interactive-element">
+                    <rect width="320" height="40" rx="3" fill="#e3f2fd"/>
+                    <text x="10" y="25" class="metric-desc">HDR Panorama</text>
+                    <text x="200" y="25" class="metric-desc" fill="#1976d2">Recommended</text>
+                </g>
+                
+                <g transform="translate(0,50)" class="interactive-element">
+                    <rect width="320" height="40" rx="3" fill="#e8f5e9"/>
+                    <text x="10" y="25" class="metric-desc">AI Focus Stack</text>
+                    <text x="200" y="25" class="metric-desc" fill="#2e7d32">Popular</text>
+                </g>
+                
+                <g transform="translate(0,100)" class="interactive-element">
+                    <rect width="320" height="40" rx="3" fill="#fff3e0"/>
+                    <text x="10" y="25" class="metric-desc">High-Res HDR</text>
+                    <text x="200" y="25" class="metric-desc" fill="#f57c00">High Performance</text>
+                </g>
+                
+                <g transform="translate(0,150)" class="interactive-element">
+                    <rect width="320" height="40" rx="3" fill="#fce4ec"/>
+                    <text x="10" y="25" class="metric-desc">AI Video Enhancement</text>
+                    <text x="200" y="25" class="metric-desc" fill="#c2185b">New</text>
+                </g>
+                
+                <g transform="translate(0,200)" class="interactive-element">
+                    <rect width="320" height="40" rx="3" fill="#e0f7fa"/>
+                    <text x="10" y="25" class="metric-desc">Batch HDR Focus Stack</text>
+                    <text x="200" y="25" class="metric-desc" fill="#006064">Advanced</text>
+                </g>
+                
+                <g transform="translate(0,250)" class="interactive-element">
+                    <rect width="320" height="40" rx="3" fill="#f3e5f5"/>
+                    <text x="10" y="25" class="metric-desc">AI Panorama Retouch</text>
+                    <text x="200" y="25" class="metric-desc" fill="#6a1b9a">Experimental</text>
+                </g>
+            </g>
+        </g>
+        
+        <!-- Enhanced Resource Estimation -->
+        <g transform="translate(400,50)">
+            <rect width="360" height="330" rx="5" fill="#f5f5f5" stroke="#e0e0e0"/>
+            <text x="20" y="30" class="metric-desc" style="font-weight: bold">Detailed Resource Analysis</text>
+            
+            <!-- Resource Metrics -->
+            <g transform="translate(20,50)">
+                <text x="0" y="0" class="metric-desc">System Requirements:</text>
+                
+                <!-- GPU Requirements -->
+                <g transform="translate(0,30)">
+                    <text x="0" y="0" class="metric-desc">GPU Memory Usage:</text>
+                    <rect width="200" height="15" rx="3" fill="#e0e0e0" transform="translate(0,10)"/>
+                    <rect width="160" height="15" rx="3" fill="#2196F3" transform="translate(0,10)"/>
+                    <text x="210" y="22" class="metric-desc">12GB/16GB</text>
+                </g>
+                
+                <!-- RAM Requirements -->
+                <g transform="translate(0,70)">
+                    <text x="0" y="0" class="metric-desc">System Memory:</text>
+                    <rect width="200" height="15" rx="3" fill="#e0e0e0" transform="translate(0,10)"/>
+                    <rect width="140" height="15" rx="3" fill="#4CAF50" transform="translate(0,10)"/>
+                    <text x="210" y="22" class="metric-desc">16GB/32GB</text>
+                </g>
+                
+                <!-- Storage Requirements -->
+                <g transform="translate(0,110)">
+                    <text x="0" y="0" class="metric-desc">Storage Buffer:</text>
+                    <rect width="200" height="15" rx="3" fill="#e0e0e0" transform="translate(0,10)"/>
+                    <rect width="180" height="15" rx="3" fill="#FF9800" transform="translate(0,10)"/>
+                    <text x="210" y="22" class="metric-desc">50GB Free</text>
+                </g>
+                
+                <!-- CPU Load -->
+                <g transform="translate(0,150)">
+                    <text x="0" y="0" class="metric-desc">CPU Utilization:</text>
+                    <rect width="200" height="15" rx="3" fill="#e0e0e0" transform="translate(0,10)"/>
+                    <rect width="120" height="15" rx="3" fill="#9C27B0" transform="translate(0,10)"/>
+                    <text x="210" y="22" class="metric-desc">6+ Cores</text>
+                </g>
+                
+                <!-- Performance Impact -->
+                <g transform="translate(0,190)">
+                    <text x="0" y="0" class="metric-desc" style="font-weight: bold">Performance Impact:</text>
+                    <g transform="translate(0,20)">
+                        <text x="0" y="0" class="metric-desc">• Processing Time: +45%</text>
+                        <text x="0" y="20" class="metric-desc">• Memory Overhead: High</text>
+                        <text x="0" y="40" class="metric-desc">• I/O Load: Moderate</text>
+                        <text x="0" y="60" class="metric-desc">• Thermal Impact: High</text>
+                    </g>
+                </g>
+            </g>
+        </g>
+        
+        <!-- Optimization Strategies -->
+        <g transform="translate(780,50)">
+            <rect width="360" height="330" rx="5" fill="#f5f5f5" stroke="#e0e0e0"/>
+            <text x="20" y="30" class="metric-desc" style="font-weight: bold">Advanced Optimization Strategy</text>
+            
+            <!-- Strategy Details -->
+            <g transform="translate(20,50)">
+                <text x="0" y="0" class="metric-desc" style="font-weight: bold">Pipeline Optimizations:</text>
+                <g transform="translate(0,20)">
+                    <text x="0" y="0" class="metric-desc">• Parallel Processing Streams</text>
+                    <text x="0" y="20" class="metric-desc">• Smart Resource Scheduling</text>
+                    <text x="0" y="40" class="metric-desc">• Memory Pool Management</text>
+                    <text x="0" y="60" class="metric-desc">• Dynamic Thread Allocation</text>
+                </g>
+                
+                <text x="0" y="100" class="metric-desc" style="font-weight: bold">Conflict Resolution:</text>
+                <g transform="translate(0,120)">
+                    <text x="0" y="0" class="metric-desc">• Resource Priority System</text>
+                    <text x="0" y="20" class="metric-desc">• Workload Balancing</text>
+                    <text x="0" y="40" class="metric-desc">• Cache Optimization</text>
+                    <text x="0" y="60" class="metric-desc">• I/O Queue Management</text>
+                </g>
+                
+                <text x="0" y="200" class="metric-desc" style="font-weight: bold">Performance Monitoring:</text>
+                <g transform="translate(0,220)">
+                    <text x="0" y="0" class="metric-desc">• Real-time Metrics Tracking</text>
+                    <text x="0" y="20" class="metric-desc">• Bottleneck Detection</text>
+                    <text x="0" y="40" class="metric-desc">• Adaptive Optimization</text>
+                    <text x="0" y="60" class="metric-desc">• Resource Usage Alerts</text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg> 

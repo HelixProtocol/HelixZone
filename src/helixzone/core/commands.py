@@ -34,7 +34,10 @@ class DrawCommand(Command):
     def undo(self):
         """Restore the image state from before the drawing."""
         if self.layer and self.image_before:
+            current_image = self.layer.image
             self.layer.image = self.image_before.copy()
+            if not self.image_after:
+                self.image_after = current_image.copy()
             self.layer.changed.emit()
     
     def redo(self):

@@ -1,10 +1,37 @@
-PyQt6>=6.4.0
+# Required Dependencies
+PyQt6>=6.6.0
+PyQt6-sip>=13.6.0  # Required for proper PyQt6 type hints and buffer handling
 opencv-python>=4.8.0
 numpy>=1.24.0
 Pillow>=10.0.0
 scipy>=1.10.0
-cupy-cuda12x>=12.0.0  # For CUDA support (optional)
-pyopencl>=2023.1.4    # For OpenCL support (optional)
-pytest>=7.4.0         # For testing
-black>=23.7.0         # For code formatting
-flake8>=6.1.0         # For linting 
+matplotlib>=3.10.0  # For path calculations in selection tools and visualization
+pyqtgraph>=0.13.0  # For plotting and visualizations
+psutil>=5.8.0  # For memory usage monitoring
+
+# GPU Acceleration (Optional but recommended for performance)
+cupy-cuda12x>=13.0.0  # For CUDA 12.x support
+pyopencl>=2023.1.4  # For OpenCL support
+
+# Advanced Image Format Support (Optional)
+rawpy>=0.17.0  # For Camera RAW format support
+exifread>=3.0.0  # For advanced EXIF metadata handling
+OpenImageIO>=2.4.5.0  # For HDR image support
+colour>=0.4.0  # For advanced color management
+colour_demosaicing>=0.2.0  # For advanced RAW demosaicing
+
+# Development and Testing (Optional)
+pytest>=7.4.0  # For testing
+pytest-qt>=4.2.0  # For Qt-specific testing
+pytest-cov>=4.1.0  # For coverage reporting
+mypy>=1.7.0  # For type checking
+black>=23.11.0  # For code formatting
+isort>=5.12.0  # For import sorting
+flake8>=6.1.0  # For linting
+memory_profiler>=0.61.0  # For memory usage profiling
+
+# Data Analysis (Optional)
+scikit-learn>=1.4.0  # For machine learning utilities
+statsmodels>=0.14.0  # For statistical analysis
+pandas>=2.1.0  # For data analysis and manipulation
+prophet>=1.1.0  # For time series forecasting (optional) 
