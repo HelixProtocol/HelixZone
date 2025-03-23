@@ -24,6 +24,7 @@ wheels/
 venv/
 ENV/
 env/
+.venv/
 
 # IDE
 .idea/
@@ -34,4 +35,24 @@ env/
 
 # OS
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Test results and coverage reports
+.pytest_results/
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+.tox/
+nosetests.xml
+
+# Generated documentation
+docs/_build/
+
+# Log files
+*.log
+logs/
+
+# Development tools
+# Keep the directory but not the scripts
+dev_tools/*.py 
