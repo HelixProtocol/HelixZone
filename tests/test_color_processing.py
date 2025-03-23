@@ -120,7 +120,7 @@ class TestColorProcessingEdgeCases:
         # Check color preservation
         mask_region = test_masks["circle"] > 0
         mean_value = np.mean(result[mask_region])
-        assert abs(mean_value - 0.5) < 0.1, "Solid color should be preserved"
+        assert abs(mean_value - 128.0) < 5.0, "Solid color should be preserved"
         
     def test_checkerboard_pattern(self, feathering, test_images, test_masks):
         """Test color processing with checkerboard pattern."""

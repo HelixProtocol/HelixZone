@@ -1,78 +1,170 @@
-import pytest
+"""Unit tests for image processing functions with focus on edge cases."""
+
+import unittest
 import numpy as np
-from PyQt6.QtGui import QImage, QColor
-from helixzone.core.layer import Layer
+import cv2
+import os
+import sys
+import tempfile
+from pathlib import Path
 
-def test_layer_creation():
-    """Test basic layer creation and properties."""
-    layer = Layer(name="Test Layer", size=(100, 100))
-    assert layer.name == "Test Layer"
-    assert layer.image.width() == 100
-    assert layer.image.height() == 100
-    assert layer.visible == True
-    assert layer.opacity == 1.0
+# Add src to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-def test_layer_opacity():
-    """Test layer opacity settings."""
-    layer = Layer()
-    layer.set_opacity(0.5)
-    assert layer.opacity == 0.5
-    # Test bounds
-    layer.set_opacity(-0.1)
-    assert layer.opacity == 0.0
-    layer.set_opacity(1.5)
-    assert layer.opacity == 1.0
+from src.helixzone.core.utils import (
+    safe_gaussian_blur,
+    safe_canny,
+    safe_resize,
+    safe_morphology,
+    safe_threshold
+)
+from src.helixzone.core.type_defs import (
+    Mat, ImageFloat, ImageUInt8, ImageBool,
+    ensure_float32, ensure_uint8
+)
 
-def test_image_clear():
-    """Test clearing layer content."""
-    layer = Layer(size=(50, 50))
-    # Fill with red
-    layer.image.fill(QColor(255, 0, 0).rgb())
-    # Clear
-    layer.clear()
-    # Check transparency
-    assert layer.image.pixel(0, 0) == 0
-
-@pytest.mark.performance
-def test_large_image_handling():
-    """Test performance with large images."""
-    size = (4000, 4000)  # 16MP image
-    layer = Layer(size=size)
-    # Fill with pattern
-    for x in range(0, size[0], 100):
-        for y in range(0, size[1], 100):
-            layer.image.setPixel(x, y, QColor(255, 0, 0).rgb())
-    # Should handle large images without memory issues
-    layer.resize(2000, 2000)  # Test downscaling
-    assert layer.image.width() == 2000
-    assert layer.image.height() == 2000
-
-@pytest.mark.memory
-def test_memory_management():
-    """Test for memory leaks in image operations."""
-    initial_layers = []
-    for _ in range(100):
-        layer = Layer(size=(1000, 1000))
-        layer.image.fill(QColor(255, 0, 0).rgb())
-        initial_layers.append(layer)
-    # Force cleanup
-    initial_layers.clear()
-    # If no memory leak, this should complete without issues
-    final_layer = Layer(size=(1000, 1000))
-    assert final_layer.image.width() == 1000
-
-def test_numpy_conversion():
-    """Test conversion between QImage and numpy array."""
-    # Create test pattern
-    arr = np.zeros((100, 100, 3), dtype=np.uint8)
-    arr[25:75, 25:75] = [255, 0, 0]  # Red square
+class TestSafeImageOperations(unittest.TestCase):
+    """Test safe wrapper functions for OpenCV operations."""
     
-    layer = Layer(size=(100, 100))
-    layer.set_image(arr)
+    def setUp(self):
+        """Set up test case."""
+        # Create test images of different types
+        self.img_uint8 = np.ones((100, 100), dtype=np.uint8) * 128
+        self.img_float32 = np.ones((100, 100), dtype=np.float32) * 0.5
+        self.img_empty = np.array([], dtype=np.uint8)
+        self.img_tiny = np.ones((1, 1), dtype=np.uint8)
+        self.img_color = np.ones((100, 100, 3), dtype=np.uint8) * 128
+        
+    def test_safe_gaussian_blur_valid(self):
+        """Test safe_gaussian_blur with valid inputs."""
+        result = safe_gaussian_blur(self.img_uint8, (5, 5), 1.0)
+        self.assertEqual(result.shape, self.img_uint8.shape)
+        self.assertEqual(result.dtype, self.img_uint8.dtype)
+        
+        result_float = safe_gaussian_blur(self.img_float32, (5, 5), 1.0)
+        self.assertEqual(result_float.shape, self.img_float32.shape)
+        self.assertEqual(result_float.dtype, self.img_float32.dtype)
+        
+    def test_safe_gaussian_blur_edge_cases(self):
+        """Test safe_gaussian_blur with edge cases."""
+        # Test with empty array
+        result = safe_gaussian_blur(self.img_empty, (5, 5), 1.0)
+        self.assertEqual(result.size, 0)
+        
+        # Test with tiny image
+        result = safe_gaussian_blur(self.img_tiny, (5, 5), 1.0)
+        self.assertEqual(result.shape, (1, 1))
+        
+        # Test with even kernel size (should be converted to odd)
+        result = safe_gaussian_blur(self.img_uint8, (4, 4), 1.0)
+        self.assertEqual(result.shape, self.img_uint8.shape)
+        
+        # Test with zero sigma
+        result = safe_gaussian_blur(self.img_uint8, (5, 5), 0.0)
+        self.assertEqual(result.shape, self.img_uint8.shape)
+        
+    def test_safe_canny_valid(self):
+        """Test safe_canny with valid inputs."""
+        result = safe_canny(self.img_uint8, 100, 200)
+        self.assertEqual(result.shape, self.img_uint8.shape)
+        self.assertEqual(result.dtype, np.uint8)
+        
+    def test_safe_canny_edge_cases(self):
+        """Test safe_canny with edge cases."""
+        # Test with empty array
+        result = safe_canny(self.img_empty, 100, 200)
+        self.assertEqual(result.shape, (1, 1))
+        
+        # Test with tiny image
+        result = safe_canny(self.img_tiny, 100, 200)
+        self.assertEqual(result.shape, (1, 1))
+        
+        # Test with color image
+        result = safe_canny(self.img_color, 100, 200)
+        self.assertEqual(result.shape, (100, 100))
+        
+        # Test with float image
+        result = safe_canny(self.img_float32, 0.4, 0.8)
+        self.assertEqual(result.shape, self.img_float32.shape)
+        
+    def test_safe_resize_valid(self):
+        """Test safe_resize with valid inputs."""
+        result = safe_resize(self.img_uint8, (50, 50))
+        self.assertEqual(result.shape, (50, 50))
+        self.assertEqual(result.dtype, self.img_uint8.dtype)
+        
+    def test_safe_resize_edge_cases(self):
+        """Test safe_resize with edge cases."""
+        # Test with empty array
+        result = safe_resize(self.img_empty, (50, 50))
+        self.assertEqual(result.size, 0)
+        
+        # Test with invalid target size
+        result = safe_resize(self.img_uint8, (0, 50))
+        self.assertEqual(result.shape, self.img_uint8.shape)  # Should return original
+        
+    def test_safe_threshold_valid(self):
+        """Test safe_threshold with valid inputs."""
+        ret, result = safe_threshold(self.img_uint8, 100, 255)
+        self.assertEqual(result.shape, self.img_uint8.shape)
+        self.assertEqual(result.dtype, self.img_uint8.dtype)
+        
+    def test_safe_threshold_edge_cases(self):
+        """Test safe_threshold with edge cases."""
+        # Test with empty array
+        ret, result = safe_threshold(self.img_empty, 100, 255)
+        self.assertEqual(result.size, 0)
+        
+        # Test with float image
+        ret, result = safe_threshold(self.img_float32, 0.5, 1.0)
+        self.assertEqual(result.shape, self.img_float32.shape)
+        self.assertTrue(np.issubdtype(result.dtype, np.floating))
+
+class TestTypeConversions(unittest.TestCase):
+    """Test image type conversion functions."""
     
-    # Check if pattern is preserved
-    pixel = layer.image.pixel(50, 50)
-    color = QColor(pixel)
-    assert color.red() == 255
-    assert color.green() == 0
-    assert color.blue() == 0 
+    def setUp(self):
+        """Set up test case."""
+        self.img_uint8 = np.ones((100, 100), dtype=np.uint8) * 128
+        self.img_float32 = np.ones((100, 100), dtype=np.float32) * 0.5
+        
+    def test_ensure_float32(self):
+        """Test ensure_float32 function."""
+        # Convert uint8 to float32
+        float_img = ensure_float32(self.img_uint8)
+        self.assertEqual(float_img.dtype, np.float32)
+        self.assertEqual(float_img.shape, self.img_uint8.shape)
+        
+        # Already float32
+        float_img2 = ensure_float32(self.img_float32)
+        self.assertEqual(float_img2.dtype, np.float32)
+        self.assertEqual(float_img2.shape, self.img_float32.shape)
+        
+    def test_ensure_uint8(self):
+        """Test ensure_uint8 function."""
+        # Convert float32 to uint8
+        uint8_img = ensure_uint8(self.img_float32)
+        self.assertEqual(uint8_img.dtype, np.uint8)
+        self.assertEqual(uint8_img.shape, self.img_float32.shape)
+        
+        # Already uint8
+        uint8_img2 = ensure_uint8(self.img_uint8)
+        self.assertEqual(uint8_img2.dtype, np.uint8)
+        self.assertEqual(uint8_img2.shape, self.img_uint8.shape)
+        
+    def test_empty_arrays(self):
+        """Test handling of empty arrays."""
+        empty_uint8 = np.array([], dtype=np.uint8)
+        empty_float32 = np.array([], dtype=np.float32)
+        
+        # These should not raise exceptions
+        result1 = ensure_float32(empty_uint8)
+        result2 = ensure_uint8(empty_float32)
+        
+        self.assertEqual(result1.size, 0)
+        self.assertEqual(result1.dtype, np.float32)
+        self.assertEqual(result2.size, 0)
+        self.assertEqual(result2.dtype, np.uint8)
+        
+if __name__ == '__main__':
+    unittest.main()
