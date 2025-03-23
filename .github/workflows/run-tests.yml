@@ -1,0 +1,219 @@
+name: HelixZone Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:  # Allow manual triggering
+  schedule:
+    - cron: '0 0 * * *'  # Run daily at midnight UTC
+
+jobs:
+  fast-tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    
+    - name: Install Qt dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11-0 libxcb-randr0
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-xvfb pytest-cov pytest-asyncio pytest-qt
+        pip install -r requirements.txt
+    
+    # Repository-specific configuration
+    - name: Configure HelixProtocol specific settings
+      if: github.repository == 'HelixProtocol/HelixZone'
+      run: |
+        echo "Setting up HelixProtocol specific test configuration"
+        # Create config file for HelixProtocol specific settings if needed
+        echo "{\"org\": \"HelixProtocol\", \"repo\": \"HelixZone\"}" > tests/org_config.json
+    
+    - name: Run critical tests (fast)
+      run: |
+        python tests/run_critical_tests.py --timeout 60 --junit-xml
+    
+    - name: Generate test summary
+      run: |
+        python tests/test_summary.py --output_file test_summary_${{ matrix.os }}_py${{ matrix.python-version }}.md
+    
+    - name: Upload test summary
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-summary-${{ matrix.os }}-py${{ matrix.python-version }}
+        path: test_summary_${{ matrix.os }}_py${{ matrix.python-version }}.md
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results-${{ matrix.os }}-py${{ matrix.python-version }}
+        path: .pytest_results/*.xml
+    
+    # Team notification for test failures
+    - name: Notify team on failure
+      if: failure() && github.event_name == 'pull_request' && github.repository == 'HelixProtocol/HelixZone'
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: 'HelixProtocol',
+            repo: 'HelixZone',
+            body: '❌ Tests failed on ${{ matrix.os }} with Python ${{ matrix.python-version }}! @HelixProtocol/qa-team please investigate.'
+          })
+
+  nightly-full-tests:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'  # Run on schedule or manual trigger
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.13
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+        cache: 'pip'
+    
+    - name: Install Qt dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11-0 libxcb-randr0
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-xvfb pytest-cov pytest-asyncio pytest-qt
+        pip install -r requirements.txt
+    
+    # Cross-repository integration for HelixProtocol dependencies
+    - name: Setup cross-repository dependencies
+      if: github.repository == 'HelixProtocol/HelixZone'
+      run: |
+        echo "Setting up HelixProtocol cross-repository dependencies"
+        # Clone any required HelixProtocol repositories
+        if [ -f "deps/helix_repos.txt" ]; then
+          mkdir -p ../helix_deps
+          while read repo; do
+            echo "Cloning $repo..."
+            git clone https://github.com/HelixProtocol/$repo.git ../helix_deps/$repo
+          done < deps/helix_repos.txt
+        fi
+    
+    - name: Run all tests
+      run: |
+        python -m pytest tests/ --cov=src --cov-report=xml --cov-report=html
+      timeout-minutes: 60  # Set a maximum runtime of 60 minutes
+      env:
+        # Only set API key if it exists
+        HELIXPROTOCOL_API_KEY: ${{ secrets.HELIXPROTOCOL_API_KEY }}
+    
+    # Conditionally use token in Codecov upload
+    - name: Upload coverage report
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: false
+        token: ${{ secrets.CODECOV_TOKEN }}
+        
+    - name: Upload HTML coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report-html
+        path: htmlcov/
+    
+    - name: Generate comprehensive test report
+      run: |
+        python tests/test_summary.py --all --output_file comprehensive_test_report.md
+        
+    - name: Upload comprehensive test report
+      uses: actions/upload-artifact@v3
+      with:
+        name: comprehensive-test-report
+        path: comprehensive_test_report.md
+    
+    # Organization-specific badges update
+    - name: Update README Badges
+      if: github.event_name == 'schedule' && github.ref == 'refs/heads/main' && github.repository == 'HelixProtocol/HelixZone'
+      run: |
+        python tests/create_badges.py --update-readme
+        # Push badge updates to a specific branch
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add README.md badges/
+        git commit -m "Update status badges [skip ci]" || echo "No changes to commit"
+        git push origin HEAD:badges-update || echo "Failed to push badges"
+    
+    # GitHub Pages deployment
+    - name: Deploy coverage to GitHub Pages
+      if: github.ref == 'refs/heads/main' && github.repository == 'HelixProtocol/HelixZone'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./htmlcov
+        destination_dir: coverage-report
+        
+  # Weekly security scan
+  security-scan:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' && github.repository == 'HelixProtocol/HelixZone'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+        
+    - name: Install security tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit safety
+        
+    - name: Scan dependencies
+      run: |
+        safety check -r requirements.txt
+        
+    - name: Scan code
+      run: |
+        bandit -r src/ -f json -o security-report.json
+        
+    - name: Upload security report
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-report
+        path: security-report.json
+        
+    - name: Notify on security issues
+      if: failure()
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.rest.issues.create({
+            owner: 'HelixProtocol',
+            repo: 'HelixZone',
+            title: '🚨 Security vulnerabilities detected',
+            body: 'The weekly security scan has detected potential security issues. Please check the security-report artifact for details.',
+            labels: ['security', 'automated']
+          }) 
