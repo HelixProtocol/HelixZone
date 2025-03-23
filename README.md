@@ -1,5 +1,9 @@
 # HelixZone Image Processing Library
 
+<!-- BUILD_BADGE_START -->![Build](https://img.shields.io/badge/build-passing-brightgreen)<!-- BUILD_BADGE_END -->
+<!-- TESTS_BADGE_START -->![Tests](https://img.shields.io/badge/passing-26%2F26-brightgreen)<!-- TESTS_BADGE_END -->
+<!-- COVERAGE_BADGE_START -->![Coverage](https://img.shields.io/badge/coverage-0%25-unknown)<!-- COVERAGE_BADGE_END -->
+
 ## Overview
 HelixZone is a high-performance image processing library focusing on advanced selection and feathering operations. It combines machine learning techniques with traditional image processing to provide state-of-the-art results.
 
@@ -9,11 +13,55 @@ HelixZone is a high-performance image processing library focusing on advanced se
 - GPU-accelerated operations (via CUDA/OpenCL)
 - Advanced texture and feature extraction
 - Multi-threaded processing for optimal performance
+- Support for RAW, HDR, and other professional image formats (with optional dependencies)
 
 ## Installation
+
+### Basic Installation
 ```bash
 pip install -r requirements.txt
 ```
+
+### Optional Dependencies
+
+HelixZone supports several optional dependencies that enable advanced features:
+
+#### Camera RAW Format Support
+```bash
+pip install rawpy
+```
+This enables loading and processing of camera RAW files (CR2, NEF, ARW, etc.)
+
+#### Advanced EXIF Metadata Handling
+```bash
+pip install exifread
+```
+Provides detailed EXIF metadata extraction and manipulation.
+
+#### HDR Image Support
+```bash
+pip install OpenImageIO
+```
+Enables loading, processing, and saving of HDR image formats like EXR and HDR.
+
+#### Advanced Color Management
+```bash
+pip install colour
+```
+Provides comprehensive color space transformations and management.
+
+#### Advanced RAW Demosaicing
+```bash
+pip install colour_demosaicing
+```
+Enables high-quality demosaicing algorithms for RAW images.
+
+#### Install All Optional Dependencies
+```bash
+pip install rawpy exifread OpenImageIO colour colour_demosaicing
+```
+
+Note: Some of these packages may require additional system dependencies. Please refer to their respective documentation for platform-specific installation instructions.
 
 ## Quick Start
 ```python
@@ -128,6 +176,44 @@ helixzone/
 2. Create a feature branch
 3. Add tests for new functionality
 4. Submit a pull request
+
+## Testing
+HelixZone follows a comprehensive testing strategy to ensure reliability and performance.
+
+### Running Tests
+Quick test run:
+```bash
+python tests/run_critical_tests.py --verbose
+```
+
+Run all tests:
+```bash
+pytest tests/
+```
+
+Run tests with coverage:
+```bash
+pytest tests/ --cov=src --cov-report=html
+```
+
+Run specific test file:
+```bash
+pytest tests/test_batch.py
+```
+
+### CI/CD Integration
+All tests are automatically run on GitHub Actions:
+- Critical tests run on every pull request
+- Full test suite runs nightly
+- Test results and coverage reports are available as artifacts
+
+### Testing Guidelines
+1. **Unit Tests**: All modules should have thorough unit tests
+2. **Integration Tests**: Cross-module functionality must be tested
+3. **Performance Tests**: Critical operations have performance benchmarks
+4. **Edge Cases**: Test boundary conditions and error handling
+
+See the detailed [Testing Strategy](tests/README.md) for more information.
 
 ## License
 MIT License - See LICENSE file for details
